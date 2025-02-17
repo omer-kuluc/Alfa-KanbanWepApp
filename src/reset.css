@@ -15,7 +15,8 @@ body {
   line-height: 1.5;
   /* 4. Improve text rendering */
   -webkit-font-smoothing: antialiased;
-  font-family: "Plus Jakarta Sans", system-ui;;
+  font-family: "Plus Jakarta Sans", system-ui;
+  background-color: #F4F7FD;
 }
 
 /* 5. Improve media defaults */
@@ -47,4 +48,8 @@ h1, h2, h3, h4, h5, h6 {
 */
 #root, #__next {
   isolation: isolate;
+}
+
+button{
+  cursor: pointer;
 }

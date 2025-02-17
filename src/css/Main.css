@@ -1,0 +1,1149 @@
+/* Furkan start */
+.main-grid-column-group {
+  display: grid;
+  align-items: start;
+  gap: 24px;
+  padding: 24px 16px;
+  overflow-y: auto;
+  height: 100vh;
+  .main-grid-column-item:nth-child(1) .main-grid-column-title::before {
+    background-color: #49c4e5;
+  }
+  .main-grid-column-item:nth-child(2) .main-grid-column-title::before {
+    background-color: #8471f2;
+  }
+  .main-grid-column-item:nth-child(3) .main-grid-column-title::before {
+    background-color: #67e2ae;
+  }
+  .main-grid-column-item:nth-child(4) .main-grid-column-title::before {
+    background-color: #e5a449;
+  }
+  .main-grid-column-item:nth-child(5) .main-grid-column-title::before {
+    background-color: #2a3fdb;
+  }
+  .main-grid-column-item:nth-child(6) .main-grid-column-title::before {
+    background-color: #c36e6e;
+  }
+}
+
+.main-grid-column-item {
+  display: grid;
+  gap: 24px;
+}
+
+.main-grid-column-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  line-height: 15.12px;
+  letter-spacing: 2.4px;
+  color: #828fa3;
+  &::before {
+    content: "";
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+  }
+}
+
+.main-grid-column-item-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+}
+
+.main-grid-column-item-list-item {
+  padding: 24px 16px;
+  background-color: #fff;
+  box-shadow: 0px 4px 6px 0px #364e7e1a;
+  border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    h2 {
+      color: #635FC7;
+    }
+  }
+  h2 {
+    font-size: 15px;
+    line-height: 18.9px;
+    color: #000112;
+  }
+  p {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 15.12px;
+    color: #828fa3;
+  }
+}
+
+.main-grid-column-new-column {
+  display: flex;
+  align-items: center;
+  align-self: self-end;
+  justify-content: center;
+  height: calc(100% - 39px);
+  background: linear-gradient(180deg, #e9effa 0%, rgba(233, 239, 250, 0.5) 100%);
+  border-radius: 6px;
+  cursor: pointer;
+  h1 {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30.24px;
+    color: #828fa3;
+  }
+  &:hover{
+    h1{
+      color: #635FC7;
+    }
+  }
+}
+
+.main-grid-column-empty-state {
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-grid-column-empty-state-text {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22.68px;
+  text-align: center;
+  color: #828fa3;
+}
+
+.main-grid-column-empty-state-button {
+  padding: 16px;
+  background-color: #635fc7;
+  border: none;
+  color: #fff;
+  border-radius: 24px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 18.9px;
+  &:hover {
+    background-color: #a8a4ff;
+  }
+}
+
+.view-task-dialog {
+  border: none;
+  margin: auto;
+  border-radius: 6px;
+  padding: 0;
+  width: 100%;
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.view-task-contents {
+  padding: 24px;
+  display: grid;
+  gap: 24px;
+  overflow: hidden;
+}
+
+.view-task-subtask-contents,
+.view-task-current-status-contents {
+  h4 {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 15.12px;
+    color: #828fa3;
+  }
+}
+
+.view-task-subtask-contents {
+  display: grid;
+  gap: 16px;
+  ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    li {
+      padding: 16px 8px;
+      background-color: #f4f7fd;
+      border-radius: 4px;
+      color: #000112;
+    }
+    .completed {
+      label {
+        color: rgba(0, 1, 18, 0.5);
+        text-decoration: line-through;
+      }
+    }
+  }
+}
+
+/* The container */
+.view-task-subtask-contents ul li label {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 24px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15.12px;
+}
+
+/* Hide the browser's default checkbox */
+.view-task-subtask-contents ul li label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: #fff;
+  border: 1px solid #828fa33f;
+  border-radius: 2px;
+}
+
+/* On mouse-over, add a grey background color */
+.view-task-subtask-contents ul li label:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.view-task-subtask-contents ul li label input:checked ~ .checkmark {
+  background-color: #635fc7;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.view-task-subtask-contents ul li label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.view-task-subtask-contents ul li label .checkmark:after {
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.view-task-current-status-contents {
+  display: grid;
+  gap: 8px;
+  > button {
+    color: #000112;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    padding: 8px 16px;
+    display: flex;
+    align-self: center;
+    justify-content: space-between;
+    border: 1px solid #828fa340;
+    background-color: transparent;
+  }
+}
+
+.view-task-current-status-dropdown-contents {
+  position: fixed;
+  background-color: #ffffff;
+  box-shadow: 0px 10px 20px 0px #364e7e40;
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  button {
+    width: 100%;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    color: #828fa3;
+    border: none;
+    background-color: transparent;
+    text-align: left;
+  }
+}
+/* Furkan end */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*omer baslangic*/
+
+.add-new-board-modal, .add-new-task-modal, 
+.delete-modal {
+  margin: auto;
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.502);
+  }
+  border-style: none;
+  border-radius: 6px;
+  padding: 0;
+  width: 100%;
+}
+
+.add-new-task-modal,
+.add-new-board-modal {
+  input, textarea, select 
+  {
+  width: 100%;
+  border : 1px solid #828FA340;
+  border-radius: 4px;
+  padding-left: 16px;
+  margin-bottom: 24px;
+  padding-block: 8px;
+  }
+}
+
+.add-new-task-modal-content, 
+.add-new-board-modal-content, .delete-modal-content {
+  padding: 24px;
+}
+
+.add-new-task-header, .add-new-board-header {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22.68px;
+  letter-spacing: 0px;
+  color : #000112;
+}
+
+.add-new-task-title, .add-new-task-description, 
+.add-new-task-subtasks, .add-new-task-status,
+
+.add-new-board-name, .add-new-board-board-columns
+{
+  margin-top: 24px;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 15.12px;
+  letter-spacing: 0px;
+  color : #828FA3;
+  margin-bottom: 8px;
+}
+
+.add-new-task-modal-content textarea {
+  width: 100%;
+}
+
+.add-new-task-first-subtask, .add-new-task-second-subtask,
+
+.first-board-column, .second-board-column
+{
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+
+}
+
+.add-new-subtask-btn, .add-new-board-add-column-btn {
+  margin-top: 12px;
+  width: 100%;
+  border-radius: 20px;
+  background-color: #635FC71A;
+  color : #635FC7;
+  border-style: none;
+  padding-block: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+  text-align: center;
+}
+
+.add-new-task-create-task-btn, 
+.add-new-board-create-board-btn {
+  padding-block: 9px;
+  margin-top: 24px;
+  width: 100%;
+  border-radius: 20px;
+  text-align: center;
+  background-color: #635FC7;
+  color : #FFFFFF;
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 23px;
+  letter-spacing: 0px;
+  text-align: center;
+  border-style: none;
+}
+
+.delete-modal {
+  background: white;
+  border-radius: 6px;
+  border: none;
+}
+
+.delete-modal-content .delete-header {
+  color: #e74c3c;
+  margin-bottom: 10px;
+}
+
+.delete-modal-content{
+
+  .delete-message{
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    color : #828FA3;
+    margin-bottom: 24px;
+  }
+
+  .delete-board-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .cancel-delete-board-btn {
+    width: 100%;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 23px;
+    letter-spacing: 0px;
+    text-align: center;
+    padding-block: 8px;
+    border-style: none;
+    background-color: #635FC71A;
+    color : #635FC7;
+  }
+  
+}
+
+/*omer bitis*/
+
