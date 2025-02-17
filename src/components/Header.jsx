@@ -73,14 +73,14 @@ function HeaderMobile({ selectedBoard }) {
                   All boards (<span>{data.length}</span>)
                 </h3>
                 {data.map((x, index) => (
-                  <a key={index} href="#" className="header-dropdown-items">
+                  <button key={index} className="header-dropdown-items">
                     <img src="./img/dropdown-logo.svg" alt="Dropdown Logo" />
                     {x.name}
-                  </a>
+                  </button>
                 ))}
-                <a href="#" className="header-createNew">
+                <button className="header-createNew">
                   <img src="./img/dropdown-purple-logo.svg" alt="Dropdown Logo" /> + Create New Board
-                </a>
+                </button>
                 <div className="toggle-container">
                   <img src="./img/sun-logo.svg" alt="Sun" />
                   <label className="toggle">
