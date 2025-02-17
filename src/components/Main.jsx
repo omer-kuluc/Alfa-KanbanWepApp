@@ -86,8 +86,12 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard }) {
     });
   }, [dropdownMenu, screenSize, task]);
 
-  function handleChangeStatus(status) {
-    task.status = status;
+  function handleChangeStatus(newStatus) {
+    const thisSelectedBoardColumn = selectedBoard.columns.find(x => x.name === task.status);
+    thisSelectedBoardColumn.tasks = thisSelectedBoardColumn.tasks.filter(x => x.id !== task.id);
+    task.status = newStatus;
+    const newSelectedBoardColumn = selectedBoard.columns.find(x => x.name === newStatus);
+    newSelectedBoardColumn.tasks.push(task);
     setData([...data]);
   }
 
