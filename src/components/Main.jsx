@@ -1,6 +1,5 @@
 import "../css/Main.css";
 
-import { useContext, useState, useRef } from "react";
 import { Data, ScreenSize } from "../App";
 import { useContext, useEffect, useRef, useState } from "react";
 
