@@ -60,6 +60,12 @@
   background-color: #fff;
   box-shadow: 0px 4px 6px 0px #364e7e1a;
   border-radius: 8px;
+  cursor: pointer;
+  &:hover {
+    h2 {
+      color: #635FC7;
+    }
+  }
   h2 {
     font-size: 15px;
     line-height: 18.9px;
@@ -81,11 +87,17 @@
   height: calc(100% - 39px);
   background: linear-gradient(180deg, #e9effa 0%, rgba(233, 239, 250, 0.5) 100%);
   border-radius: 6px;
+  cursor: pointer;
   h1 {
     font-weight: 700;
     font-size: 24px;
     line-height: 30.24px;
     color: #828fa3;
+  }
+  &:hover{
+    h1{
+      color: #635FC7;
+    }
   }
 }
 
@@ -115,6 +127,9 @@
   font-weight: 700;
   font-size: 15px;
   line-height: 18.9px;
+  &:hover {
+    background-color: #a8a4ff;
+  }
 }
 
 .view-task-dialog {
