@@ -506,3 +506,16 @@ main {
 .sidebar-hidden main {
   margin-left: 0;
 }
+
+.main-drop-down-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  justify-content: space-between;
+  border: 1px solid #828FA340;
+  background-color: transparent;
+  padding: 9px;
+  border-radius: 4px;
+  padding-left: 16px;
+};

@@ -14,6 +14,11 @@ export default function Main() {
   const [selectedBoard, setSelectedBoard] = useState(data[0]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isSidebarHidden, setIsSidebarHidden] = useState(true);
+  const [screenHeight, setScreenHeight] = useState(window.innerHeight)
+
+  useEffect(() => { 
+    window.addEventListener("resize",()=> setScreenHeight(window.innerHeight) )
+  },[])
 
   useEffect(() => {
     screenSize < 768 && setIsSidebarHidden(true);
@@ -53,7 +58,7 @@ export default function Main() {
   return (
     <>
       <Header selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} newTaskDialogRef={taskDialogRef} newBoardDialogRef={boardDialogRef} editBoardDialogRef={editBoardDialogRef} deleteDialogRef={deleteDialogRef} />
-      {screenSize > 768 && <Sidebar selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} isHidden={isSidebarHidden} setHidden={setIsSidebarHidden} newBoardDialogRef={boardDialogRef}/>}
+      {screenSize > 768 && <Sidebar selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} isHidden={isSidebarHidden} setHidden={setIsSidebarHidden} newBoardDialogRef={boardDialogRef} />}
       <div className={`app-container ${isSidebarHidden ? "sidebar-hidden" : ""}`}>
         <main>
           <div className="main-grid-column-group" style={columnGroupStyle}>
@@ -104,17 +109,17 @@ export default function Main() {
           </button> */}
         </main>
       </div>
-      <AddNewTask dialogRef={taskDialogRef} closeModal={closeAddNewTaskModal} />
+      <AddNewTask dialogRef={taskDialogRef} closeModal={closeAddNewTaskModal} selectedBoard={selectedBoard} screenHeight={screenHeight}/>
       <AddNewBoard dialogRef={boardDialogRef} closeModal={closeAddNewBoardModal} />
-      <EditTask dialogRef={editTaskDialogRef} closeModal={closeEditTaskModal} task={selectedTask} selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} />
+      <EditTask dialogRef={editTaskDialogRef} closeModal={closeEditTaskModal} task={selectedTask} selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} screenHeight={screenHeight} />
       <EditBoard dialogRef={editBoardDialogRef} closeModal={closeEditBoardModal} />
       <DeleteModal dialogRef={deleteDialogRef} viewTaskDialogRef={viewTaskDialogRef} closeModal={closeDeleteModal} task={selectedTask} selectedBoard={selectedBoard} />
-      <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} />
+      <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} screenHeight={screenHeight} />
     </>
   );
 }
 
-function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRef, editTaskDialogRef }) {
+function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRef, editTaskDialogRef,screenHeight }) {
   const dropDownButtonRef = useRef(null);
   const dotDropDownButtonRef = useRef(null);
   const { data, setData } = useContext(Data);
@@ -146,7 +151,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
       top: dotDropDownButtonRef.current.getBoundingClientRect().bottom + 16,
       right: 0,
     });
-  }, [dropdownMenu, screenSize, task, dotDropdownMenu]);
+  }, [dropdownMenu, screenSize, task, dotDropdownMenu,screenHeight]);
 
   function handleChangeStatus(newStatus) {
     const thisSelectedBoardColumn = selectedBoard.columns.find((x) => x.name === task.status);
@@ -218,51 +223,109 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
 }
 
 // Add New Task Modal
-function AddNewTask({ dialogRef, closeModal }) {
+function AddNewTask({ dialogRef, closeModal, selectedBoard,screenHeight }) {
+  const { data, setData } = useContext(Data);
+  const screenSize = useContext(ScreenSize);
+  const dropDownButtonRef = useRef(null);
+  const [subtasks, setSubtasks] = useState([{ title: "", isCompleted: false }])
+  const [dropdownMenu, setDropdownMenu] = useState(false)
+  const [currentStatus, setCurrentStatus] = useState(selectedBoard.columns[0].name)
+  const [dropdownMenuPosition, setDropdownMenuPosition] = useState({ left: 0, top: 0, right: 0 });
+
+
+  useEffect(() => {
+    setDropdownMenuPosition({
+      left: dropDownButtonRef.current.getBoundingClientRect().left,
+      top: dropDownButtonRef.current.getBoundingClientRect().bottom + 16,
+      right: screenSize - dropDownButtonRef.current.getBoundingClientRect().right,
+    });
+  }, [screenSize, dropdownMenu,screenHeight]);
+
+  function handleSubmit(e) {
+    const formData = new FormData(e.target);
+    const formObje = Object.fromEntries(formData);
+    const foundedColumn = selectedBoard.columns.find(x => x.name === currentStatus)
+    const newTaskObj = {
+      id: crypto.randomUUID(),
+      title: formObje.title,
+      description: formObje.description,
+      status: currentStatus,
+      statusId: foundedColumn.id,
+      subtasks: subtasks
+    }
+    foundedColumn.tasks.push(newTaskObj);
+    setData([...data])
+    e.target.reset()
+    setSubtasks([{ title: "", isCompleted: false }])
+  }
+
+  function handleChangeSubtasks(e, i) {
+    subtasks[i].title = e.target.value;
+    setSubtasks([...subtasks])
+  }
+
+  function handleRemoveSubtasks(i) {
+    if (subtasks.length > 1) {
+      setSubtasks(subtasks.filter((_, index) => index !== i))
+    }
+  }
+
+
+
+  function handleChangeStatus(selectedStatus) {
+    setCurrentStatus(selectedStatus)
+    setTimeout(() => setDropdownMenu(false), 100);
+  }
+
   return (
-    <dialog ref={dialogRef} className="add-new-task-modal">
-      <form method="dialog" className="add-new-task-modal-content">
+    <dialog ref={dialogRef} className="add-new-task-modal" onClick={() => dialogRef.current.close()}>
+      <form onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="add-new-task-header">Add New Task</h2>
         <label>
           <p className="add-new-task-title">Title</p>
-          <input type="text" placeholder="e.g. Take coffee break" required />
+          <input name="title" type="text" placeholder="e.g. Take coffee break" required />
         </label>
 
         <label>
           <p className="add-new-task-description">Description</p>
-          <textarea placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."></textarea>
+          <textarea name="description" placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."></textarea>
         </label>
 
         <label>
           <p className="add-new-task-subtasks">Subtasks</p>
-          <div className="add-new-task-first-subtask">
-            <input type="text" placeholder="e.g. Make coffee" />
-            <img src="/img/cross-icon.svg " />
-          </div>
-          <div className="add-new-task-second-subtask">
-            <input type="text" placeholder="e.g. Make coffee" />
-            <img src="/img/cross-icon.svg " />
-          </div>
+          {subtasks?.map((subtask, i) => (
+            <div key={i} className="add-new-task-first-subtask" >
+              <input type="text" placeholder="e.g. Make coffee"  value={subtask.title} onChange={(e) => handleChangeSubtasks(e, i)} />
+              <button type="button" onClick={() => handleRemoveSubtasks(i)}>
+                <img src="/img/cross-icon.svg " />
+              </button>
+            </div>
+          ))}
         </label>
 
-        <button type="button" className="add-new-subtask-btn">
+        <button type="button" className="add-new-subtask-btn" onClick={() => setSubtasks([...subtasks, { title: "", isCompleted: false }])}>
           + Add New Subtask
         </button>
 
         <label>
           <p className="add-new-task-status">Status</p>
-          <select className="add-new-task-status-options">
-            <option>Todo</option>
-            <option>In Progress</option>
-            <option>Completed</option>
-          </select>
+          <button className="main-drop-down-btn" type="button" ref={dropDownButtonRef} onClick={() => setDropdownMenu(!dropdownMenu)}>
+            {currentStatus}
+            <img src="/img/bottom-arrow.svg" />
+          </button>
+          {dropdownMenu && (
+            <div className="view-task-current-status-dropdown-contents" style={dropdownMenuPosition}>
+              {selectedBoard.columns.map((column) => (
+                <button type="button" key={column.id} onClick={() => handleChangeStatus(column.name)}>
+                  {column.name}
+                </button>
+              ))}
+            </div>
+          )}
         </label>
 
         <button type="submit" className="add-new-task-create-task-btn">
-          Create Task
-        </button>
-        <button type="button" onClick={closeModal} className="close-modal-btn">
-          Close
+          Save Changes
         </button>
       </form>
     </dialog>
@@ -307,7 +370,7 @@ function AddNewBoard({ dialogRef, closeModal }) {
   );
 }
 
-function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRef }) {
+function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRef , screenHeight}) {
   const { data, setData } = useContext(Data);
   const screenSize = useContext(ScreenSize);
   const dropDownButtonRef = useRef(null);
@@ -322,7 +385,7 @@ function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRe
       top: dropDownButtonRef.current.getBoundingClientRect().bottom + 16,
       right: screenSize - dropDownButtonRef.current.getBoundingClientRect().right,
     });
-  }, [task, screenSize, dropdownMenu]);
+  }, [task, screenSize, dropdownMenu, screenHeight]);
 
   const [subtasks, setSubtasks] = useState(task?.subtasks || []);
   useEffect(() => {
