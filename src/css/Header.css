@@ -220,14 +220,22 @@ input:checked+.slider:before {
   width: 90%;
   background-color: transparent;
   border: none;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
 }
 
 .header-dropdown-items.active-board {
   background-color: rgba(99, 95, 199, 1);
   color: white;
-  border-top-right-radius: 100px;
-  border-bottom-right-radius: 100px;
   transition: 0.3s ease-in-out;
+}
+
+.header-dropdown-items:not(.active-board):hover{
+  background-color: rgba(99, 95, 199, 0.1);
+  color:  #635FC7;
+  svg{
+    fill: #635FC7;
+  }
 }
 
 .dropdown-content a img {
@@ -275,9 +283,11 @@ input:checked+.slider:before {
   align-items: center;
   gap: 24px;
 }
+
 .header-tablet-logo{
   padding-left: 10px;
 }
+
 .header-tabler-addNew-button {
   padding: 15px 20px;
   border: none;

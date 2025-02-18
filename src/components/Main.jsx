@@ -52,8 +52,8 @@ export default function Main() {
 
   return (
     <>
-      <Header selectedBoard={selectedBoard} />
-      {screenSize > 768 && <Sidebar selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} isHidden={isSidebarHidden} setHidden={setIsSidebarHidden} />}
+      <Header selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} newTaskDialogRef={taskDialogRef} newBoardDialogRef={boardDialogRef} editBoardDialogRef={editBoardDialogRef} deleteDialogRef={deleteDialogRef} />
+      {screenSize > 768 && <Sidebar selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} isHidden={isSidebarHidden} setHidden={setIsSidebarHidden} newBoardDialogRef={boardDialogRef}/>}
       <div className={`app-container ${isSidebarHidden ? "sidebar-hidden" : ""}`}>
         <main>
           <div className="main-grid-column-group" style={columnGroupStyle}>

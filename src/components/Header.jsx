@@ -3,17 +3,17 @@ import "../css/Header.css";
 import { Data, ScreenSize } from "../App";
 import { useContext, useState, useEffect } from "react";
 
-export default function Header({ selectedBoard }) {
+export default function Header({ selectedBoard, newTaskDialogRef, newBoardDialogRef, editBoardDialogRef, deleteDialogRef, setSelectedBoard }) {
   const screenSize = useContext(ScreenSize);
 
   return screenSize >= 768 ?
-    <HeaderTablet selectedBoard={selectedBoard} />
+    <HeaderTablet selectedBoard={selectedBoard} newTaskDialogRef={newTaskDialogRef} editBoardDialogRef={editBoardDialogRef} deleteDialogRef={deleteDialogRef} />
     :
-    <HeaderMobile selectedBoard={selectedBoard} />;
+    <HeaderMobile selectedBoard={selectedBoard} newTaskDialogRef={newTaskDialogRef} newBoardDialogRef={newBoardDialogRef} editBoardDialogRef={editBoardDialogRef} deleteDialogRef={deleteDialogRef} setSelectedBoard={setSelectedBoard} />;
 }
 
 
-function HeaderMobile({ selectedBoard }) {
+function HeaderMobile({ selectedBoard, newTaskDialogRef, newBoardDialogRef, editBoardDialogRef, deleteDialogRef, setSelectedBoard }) {
   const { data } = useContext(Data);
   const [isActive, setIsActive] = useState(false);
   const [isDotActive, setDotActive] = useState(false);
@@ -52,6 +52,10 @@ function HeaderMobile({ selectedBoard }) {
     };
   }, [isDotActive]);
 
+  useEffect(() => {
+    setIsActive(false)
+  }, [selectedBoard])
+
   return (
     <>
       {isActive && <div className="overlay" onClick={() => setIsActive(false)}></div>}
@@ -60,7 +64,7 @@ function HeaderMobile({ selectedBoard }) {
           <img src="./img/logo.svg" alt="Logo" />
           <div className="dropdown">
             <button className="dropdown-button" onClick={toggleDropdown}>
-              Platform Launch
+              {selectedBoard.name}
               {isActive ? (
                 <img src="./img/up-arrow.svg" alt="up arrow" />
               ) : (
@@ -73,12 +77,15 @@ function HeaderMobile({ selectedBoard }) {
                   All boards (<span>{data.length}</span>)
                 </h3>
                 {data.map((x, index) => (
-                  <button key={index} className="header-dropdown-items">
-                    <img src="./img/dropdown-logo.svg" alt="Dropdown Logo" />
+                  <button key={index} className={`header-dropdown-items ${selectedBoard.name === x.name ? "active-board" : ""}`} onClick={() => setSelectedBoard(x)}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill={selectedBoard.name === x.name ? "#fff" : "#828FA3"} xmlns="http://www.w3.org/2000/svg">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M0.846133 0.846133C0.304363 1.3879 0 2.12271 0 2.88889V13.1111C0 13.8773 0.304363 14.6121 0.846133 15.1538C1.3879 15.6957 2.12271 16 2.88889 16H13.1111C13.8773 16 14.6121 15.6957 15.1538 15.1538C15.6957 14.6121 16 13.8773 16 13.1111V2.88889C16 2.12271 15.6957 1.3879 15.1538 0.846133C14.6121 0.304363 13.8773 0 13.1111 0H2.88889C2.12271 0 1.3879 0.304363 0.846133 0.846133ZM1.33333 13.1111V8.44448H9.77781V14.6667H2.88889C2.03022 14.6667 1.33333 13.9698 1.33333 13.1111ZM9.77781 7.11111V1.33333H2.88889C2.47633 1.33333 2.08067 1.49723 1.78895 1.78895C1.49723 2.08067 1.33333 2.47633 1.33333 2.88889V7.11111H9.77781ZM11.1111 5.77778H14.6667V10.2222H11.1111V5.77778ZM14.6667 11.5555H11.1111V14.6667H13.1111C13.5236 14.6667 13.9194 14.5028 14.2111 14.2111C14.5028 13.9194 14.6667 13.5236 14.6667 13.1111V11.5555ZM14.6667 2.88889V4.44445H11.1111V1.33333H13.1111C13.5236 1.33333 13.9194 1.49723 14.2111 1.78895C14.5028 2.08067 14.6667 2.47633 14.6667 2.88889Z" />
+                    </svg>
+
                     {x.name}
                   </button>
                 ))}
-                <button className="header-createNew">
+                <button className="header-createNew" onClick={() => newBoardDialogRef.current.showModal()} >
                   <img src="./img/dropdown-purple-logo.svg" alt="Dropdown Logo" /> + Create New Board
                 </button>
                 <div className="toggle-container">
@@ -94,14 +101,14 @@ function HeaderMobile({ selectedBoard }) {
           </div>
         </div>
         <div className="header-mobile-right">
-          <button className="header-addNew-button"> <img src="./img/plus-icon.svg" alt="" /></button>
+          <button className="header-addNew-button" onClick={() => newTaskDialogRef.current.showModal()}> <img src="./img/plus-icon.svg" alt="" /></button>
           <div className="drop-down-dot">
             <button className="dotBtn" onClick={toggleDotmenu}><img src="./img/dots.svg" alt="" /></button >
             {
               isDotActive && (
                 <div className="dot-menu">
-                  <button className="editDot">Edit Board</button>
-                  <button className="deleteDot">Delete Board</button>
+                  <button className="editDot" onClick={() => editBoardDialogRef.current.showModal()}>Edit Board</button>
+                  <button className="deleteDot" onClick={() => deleteDialogRef.current.showModal()}>Delete Board</button>
                 </div>
               )
             }
@@ -115,7 +122,7 @@ function HeaderMobile({ selectedBoard }) {
 
 
 
-function HeaderTablet({ selectedBoard }) {
+function HeaderTablet({ selectedBoard, newTaskDialogRef, editBoardDialogRef, deleteDialogRef }) {
   const [isDotActive, setDotActive] = useState(false);
   const toggleDotmenu = () => {
     setDotActive(!isDotActive)
@@ -123,7 +130,7 @@ function HeaderTablet({ selectedBoard }) {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isDotActive && !event.target.closest(".dot-menu")) {
+      if (isDotActive && !event.target.closest(".dot-menu-tablet")) {
         setDotActive(false);
       }
     };
@@ -141,20 +148,20 @@ function HeaderTablet({ selectedBoard }) {
           <img src="./img/kanban.svg" alt="" />
         </div>
         <div className="header-tablet-logo">
-          <h1>Platform Launch</h1>
+          <h1>{selectedBoard.name}</h1>
         </div>
       </div>
       <div className="header-tablet-right">
         <div className="header-tablet-addnew">
-          <button className="header-tabler-addNew-button"> +Add New Task</button>
+          <button className="header-tabler-addNew-button" onClick={() => newTaskDialogRef.current.showModal()}> +Add New Task</button>
         </div>
         <div className="drop-down-dot">
           <button className="dotBtn" onClick={toggleDotmenu}><img src="./img/dots.svg" alt="" /></button >
           {
             isDotActive && (
               <div className="dot-menu-tablet">
-                <button className="editDot">Edit Board</button>
-                <button className="deleteDot">Delete Board</button>
+                <button className="editDot" onClick={() => editBoardDialogRef.current.showModal()}>Edit Board</button>
+                <button className="deleteDot" onClick={() => deleteDialogRef.current.showModal()}>Delete Board</button>
               </div>
             )
           }
