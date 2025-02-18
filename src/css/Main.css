@@ -1,5 +1,5 @@
 /* Furkan start */
-main{
+main {
   overflow: auto;
   width: 100%;
   height: calc(100vh - 64px);
@@ -401,7 +401,8 @@ main{
   align-items: baseline;
 }
 
-.add-new-task-first-subtask {
+.add-new-task-first-subtask,
+.first-board-column {
   button {
     border: none;
     background-color: transparent;
@@ -490,7 +491,6 @@ main{
 
 /*omer bitis*/
 
-
 /* merve starts here */
 
 .app-container {
@@ -513,9 +513,9 @@ main {
   align-items: center;
   text-align: left;
   justify-content: space-between;
-  border: 1px solid #828FA340;
+  border: 1px solid #828fa340;
   background-color: transparent;
   padding: 9px;
   border-radius: 4px;
   padding-left: 16px;
-};
+}
