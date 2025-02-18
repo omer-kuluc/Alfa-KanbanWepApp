@@ -484,3 +484,20 @@
 }
 
 /*omer bitis*/
+
+
+/* merve starts here */
+
+.app-container {
+  display: flex;
+  transition: all 0.3s ease-in-out;
+}
+
+main {
+  margin-left: 22vh;
+  transition: all 0.3s ease-in-out;
+}
+
+.sidebar-hidden main {
+  margin-left: 0;
+}
