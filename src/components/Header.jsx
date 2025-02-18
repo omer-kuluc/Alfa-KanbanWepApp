@@ -16,13 +16,13 @@ export default function Header({ selectedBoard }) {
 function HeaderMobile({ selectedBoard }) {
   const { data } = useContext(Data);
   const [isActive, setIsActive] = useState(false);
-  const [isDotActive,setDotActive] =useState(false)
+  const [isDotActive, setDotActive] = useState(false);
 
   const toggleDropdown = () => {
     setIsActive(!isActive);
   };
 
-  const toggleDotmenu = () =>{
+  const toggleDotmenu = () => {
     setDotActive(!isDotActive)
   }
 
@@ -98,7 +98,7 @@ function HeaderMobile({ selectedBoard }) {
           <div className="drop-down-dot">
             <button className="dotBtn" onClick={toggleDotmenu}><img src="./img/dots.svg" alt="" /></button >
             {
-              isDotActive &&(
+              isDotActive && (
                 <div className="dot-menu">
                   <button className="editDot">Edit Board</button>
                   <button className="deleteDot">Delete Board</button>
@@ -116,9 +116,50 @@ function HeaderMobile({ selectedBoard }) {
 
 
 function HeaderTablet({ selectedBoard }) {
+  const [isDotActive, setDotActive] = useState(false);
+  const toggleDotmenu = () => {
+    setDotActive(!isDotActive)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isDotActive && !event.target.closest(".dot-menu")) {
+        setDotActive(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDotActive]);
   return (
-    <header>
-      <h1>My Kanban Board Tablet</h1>
-    </header>
+    <div className="header-tablet">
+      <div className="header-tablet-left">
+        <div className="side-bar-logo">
+          <img src="./img/logo.svg" alt="" />
+          <img src="./img/kanban.svg" alt="" />
+        </div>
+        <div className="header-tablet-logo">
+          <h1>Platform Launch</h1>
+        </div>
+      </div>
+      <div className="header-tablet-right">
+        <div className="header-tablet-addnew">
+          <button className="header-tabler-addNew-button"> +Add New Task</button>
+        </div>
+        <div className="drop-down-dot">
+          <button className="dotBtn" onClick={toggleDotmenu}><img src="./img/dots.svg" alt="" /></button >
+          {
+            isDotActive && (
+              <div className="dot-menu-tablet">
+                <button className="editDot">Edit Board</button>
+                <button className="deleteDot">Delete Board</button>
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
   );
 }
