@@ -21,7 +21,9 @@ export default function Sidebar({ selectedBoard, setSelectedBoard, isHidden, set
                 All boards (<span>{data.length}</span>)
               </h3>
               {data.map((x, index) => (
-                <button key={index} className="header-dropdown-items">
+                <button key={index} className={`header-dropdown-items ${selectedBoard.name === x.name ? "active-board" : ""}`} onClick={() => {
+                  setSelectedBoard(x);
+                }}>
                   <img src="./img/dropdown-logo.svg" alt="Dropdown Logo" />
                   {x.name}
                 </button>

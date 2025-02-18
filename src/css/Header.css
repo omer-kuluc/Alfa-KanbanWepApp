@@ -223,7 +223,7 @@ input:checked+.slider:before {
   border: none;
 }
 
-.header-dropdown-items:hover {
+.header-dropdown-items.active-board {
   background-color: rgba(99, 95, 199, 1);
   color: white;
   border-top-right-radius: 100px;
