@@ -5,6 +5,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import toast from "react-hot-toast";
 
 export default function Main() {
   const { data } = useContext(Data);
@@ -98,7 +99,7 @@ export default function Main() {
       <AddNewBoard dialogRef={boardDialogRef} closeModal={closeAddNewBoardModal} />
       <EditTask dialogRef={editTaskDialogRef} closeModal={closeEditTaskModal} task={selectedTask} />
       <EditBoard dialogRef={editBoardDialogRef} closeModal={closeEditBoardModal} />
-      <DeleteModal dialogRef={deleteDialogRef} closeModal={closeDeleteModal} task={selectedTask} selectedBoard={selectedBoard} />
+      <DeleteModal dialogRef={deleteDialogRef} viewTaskDialogRef={viewTaskDialogRef} closeModal={closeDeleteModal} task={selectedTask} selectedBoard={selectedBoard} />
       <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} />
     </>
   );
@@ -121,6 +122,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
 
   useEffect(() => {
     setDropdownMenu(false);
+    setDotDropdownMenu(false);
   }, [task]);
 
   useEffect(() => {
@@ -147,8 +149,14 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
     setDropdownMenu(false);
   }
 
+  function handleCloseModal() {
+    viewTaskDialogRef.current.close();
+    setDropdownMenu(false);
+    setDotDropdownMenu(false);
+  }
+
   return (
-    <dialog ref={viewTaskDialogRef} className="view-task-dialog" onClick={() => viewTaskDialogRef.current.close()}>
+    <dialog ref={viewTaskDialogRef} className="view-task-dialog" onClick={handleCloseModal}>
       <div className="view-task-contents" onClick={(e) => e.stopPropagation()}>
         <div className="view-task-contents-header">
           <h2>{task?.title}</h2>
@@ -329,14 +337,6 @@ function EditTask({ dialogRef, closeModal, task }) {
               </button>
             </div>
           ))}
-          {/* <div className="add-new-task-first-subtask">
-            <input type="text" placeholder="e.g. Make coffee" defaultValue={task?.description} />
-            <img src="/img/cross-icon.svg " />
-          </div>
-          <div className="add-new-task-second-subtask">
-            <input type="text" placeholder="e.g. Make coffee" />
-            <img src="/img/cross-icon.svg " />
-          </div> */}
         </label>
 
         <button type="button" className="add-new-subtask-btn" onClick={() => setSubtasks([...subtasks, { title: "", isCompleted: false }])}>
@@ -400,21 +400,22 @@ function EditBoard({ dialogRef, closeModal }) {
   );
 }
 
-function DeleteModal({ dialogRef, closeModal, task, selectedBoard }) {
+function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedBoard }) {
   const { data, setData } = useContext(Data);
-  
+
   function handleConfirmDelete() {
     const thisSelectedBoardColumn = selectedBoard.columns.find((x) => x.name === task.status);
     thisSelectedBoardColumn.tasks = thisSelectedBoardColumn.tasks.filter((x) => x.id !== task.id);
     setData([...data]);
+    viewTaskDialogRef.current.close();
+    toast.success("Task deleted successfully.");
   }
-  
+
   return (
     <dialog ref={dialogRef} className="delete-modal">
       <form method="dialog" className="delete-modal-content">
         <h2 className="delete-header">Delete this board?</h2>
-        <p className="delete-message">Are you sure you want to delete the ‘Platform Launch’ board? This action will remove all columns and tasks and cannot be reversed.</p>
-
+        <p className="delete-message">Are you sure you want to delete the ‘{task?.title}’ board? This action will remove all columns and tasks and cannot be reversed.</p>
         <button type="submit" className="delete-board-btn" onClick={handleConfirmDelete}>
           Delete
         </button>

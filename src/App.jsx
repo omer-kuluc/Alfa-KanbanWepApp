@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 
 import Main from "./components/Main";
+import { Toaster } from "react-hot-toast";
 
 export const Data = createContext(null);
 export const ScreenSize = createContext(null);
@@ -19,6 +20,10 @@ export default function App() {
   return (
     <ScreenSize.Provider value={screenSize}>
       <Data.Provider value={{ data, setData }}>
+        <Toaster 
+          position="top-center"
+          reverseOrder={false}
+        />
         {data.length > 0 && <Main />}
       </Data.Provider>
     </ScreenSize.Provider>
