@@ -103,16 +103,15 @@
   background-color: rgba(99, 95, 199, 1);
   border-radius: 25px;
   transition: 0.4s;
-
 }
 
 .slider:before {
   content: "";
   position: absolute;
-  height: 15px;
-  width: 15px;
+  height: 14px;
+  width: 14px;
   left: 2px;
-  bottom: 3.5px;
+  bottom: 2.5px;
   background-color: white;
   border-radius: 50%;
   transition: 0.4s;
@@ -235,4 +234,89 @@ input:checked+.slider:before {
 .dropdown-content a img {
   width: 16px;
   height: 16px;
+}
+
+/*  header tablet version start here */
+
+.header-tablet {
+  height: 10vh;
+  background-color: rgba(255, 255, 255, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(228, 235, 250, 1);
+  padding-inline: 29px;
+}
+
+.header-tablet-left {
+  display: flex;
+  align-items: center;
+
+  h1 {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30.24px;
+    letter-spacing: 0px;
+  }
+
+}
+
+.side-bar-logo {
+  display: flex;
+  align-items: center;
+  padding-inline: 21px;
+  gap: 15px;
+  border-right: 1px solid rgba(228, 235, 250, 1);
+  padding-right: 57.5px;
+  height: 10vh; 
+}
+
+.header-tablet-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.header-tablet-logo{
+  padding-left: 10px;
+}
+.header-tabler-addNew-button {
+  padding: 15px 20px;
+  border: none;
+  border-radius: 24px;
+  background-color: rgba(99, 95, 199, 1);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 18.9px;
+  letter-spacing: 0px;
+  color: white;
+}
+
+
+.dot-menu-tablet {
+  box-shadow: 0px 10px 20px 0px rgba(54, 78, 126, 0.25);
+  width: 180px;
+  height: 94px;
+  border-radius: 8px;
+  position: absolute;
+  right: 9px;
+  top: 10vh;
+  padding-inline: 16px;
+  padding-bottom: 16px;
+  background-color: rgba(255, 255, 255, 1);
+
+  button {
+    background-color: transparent;
+    border: 1px solid transparent;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    letter-spacing: 0px;
+    display: flex;
+    color: rgba(130, 143, 163, 1);
+    margin-top: 16px;
+  }
+
+  .deleteDot {
+    color: rgba(234, 85, 85, 1);
+  }
 }
