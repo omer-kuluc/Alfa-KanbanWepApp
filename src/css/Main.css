@@ -1,11 +1,16 @@
 /* Furkan start */
+main{
+  overflow: auto;
+  width: 100%;
+  height: calc(100vh - 64px);
+}
+
 .main-grid-column-group {
   display: grid;
   align-items: start;
   gap: 24px;
   padding: 24px 16px;
-  overflow-y: auto;
-  height: 100vh;
+  height: 70vh;
   .main-grid-column-item:nth-child(1) .main-grid-column-title::before {
     background-color: #49c4e5;
   }
@@ -494,7 +499,7 @@
 }
 
 main {
-  margin-left: 22vh;
+  margin-left: 261px;
   transition: all 0.3s ease-in-out;
 }
 
