@@ -245,7 +245,7 @@ input:checked+.slider:before {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid rgba(228, 235, 250, 1);
-  padding-inline: 29px;
+  padding-right: 25px;
 }
 
 .header-tablet-left {
@@ -264,11 +264,11 @@ input:checked+.slider:before {
 .side-bar-logo {
   display: flex;
   align-items: center;
-  padding-inline: 21px;
   gap: 15px;
   border-right: 1px solid rgba(228, 235, 250, 1);
-  padding-right: 57.5px;
   height: 10vh; 
+  width: 23vh;
+  padding-left: 15px;
 }
 
 .header-tablet-right {

@@ -1,5 +1,6 @@
 aside {
-  width: 261px;
+  width: 23vh; 
+  transition: width 0.2s ease-in-out;
   height: 100vh;
   background-color: rgba(255, 255, 255, 1);
   display: flex;
@@ -7,7 +8,6 @@ aside {
   position: absolute;
   top: 10vh;
   justify-content: space-between;
-
 }
 
 .side-bar-menu {
@@ -74,3 +74,11 @@ aside {
   cursor: pointer;
 }
 
+.sidebar-down{
+  padding-bottom: 10vh;
+}
+
+.sidebar-hidden aside {
+  width: 0;
+  overflow: hidden;
+}
