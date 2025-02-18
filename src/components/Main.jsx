@@ -9,10 +9,15 @@ import toast from "react-hot-toast";
 
 export default function Main() {
   const { data } = useContext(Data);
+  const screenSize = useContext(ScreenSize);
   const viewTaskDialogRef = useRef(null);
   const [selectedBoard, setSelectedBoard] = useState(data[0]);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [isSidebarHidden, setIsSidebarHidden] = useState(false);
+  const [isSidebarHidden, setIsSidebarHidden] = useState(true);
+
+  useEffect(() => {
+    screenSize < 768 && setIsSidebarHidden(true);
+  }, [screenSize])
 
   const columnGroupStyle = {
     gridTemplateColumns: `repeat(${selectedBoard.columns.length + 1}, ${selectedBoard.columns.length > 0 ? "280px" : "100%"})`,
@@ -48,7 +53,7 @@ export default function Main() {
   return (
     <>
       <Header selectedBoard={selectedBoard} />
-      <Sidebar selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} isHidden={isSidebarHidden} setHidden={setIsSidebarHidden} />
+      {screenSize > 768 && <Sidebar selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} isHidden={isSidebarHidden} setHidden={setIsSidebarHidden} />}
       <div className={`app-container ${isSidebarHidden ? "sidebar-hidden" : ""}`}>
         <main>
           <div className="main-grid-column-group" style={columnGroupStyle}>
@@ -82,7 +87,7 @@ export default function Main() {
               </div>
             )}
           </div>
-          <button onClick={openAddNewTaskModal} className="open-modal-btn">
+          {/* <button onClick={openAddNewTaskModal} className="open-modal-btn">
             Add New Task
           </button>
           <button onClick={openAddNewBoardModal} className="open-modal-btn">
@@ -96,13 +101,12 @@ export default function Main() {
           </button>
           <button onClick={openDeleteModal} className="open-modal-btn">
             Delete Board
-          </button>
+          </button> */}
         </main>
       </div>
       <AddNewTask dialogRef={taskDialogRef} closeModal={closeAddNewTaskModal} />
       <AddNewBoard dialogRef={boardDialogRef} closeModal={closeAddNewBoardModal} />
-      <EditTask dialogRef={editTaskDialogRef} closeModal={closeEditTaskModal} task={selectedTask}
-        selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} />
+      <EditTask dialogRef={editTaskDialogRef} closeModal={closeEditTaskModal} task={selectedTask} selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} />
       <EditBoard dialogRef={editBoardDialogRef} closeModal={closeEditBoardModal} />
       <DeleteModal dialogRef={deleteDialogRef} viewTaskDialogRef={viewTaskDialogRef} closeModal={closeDeleteModal} task={selectedTask} selectedBoard={selectedBoard} />
       <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} />
@@ -217,7 +221,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
 function AddNewTask({ dialogRef, closeModal }) {
   return (
     <dialog ref={dialogRef} className="add-new-task-modal">
-      <form method="dialog" className="add-new-task-modal-content" >
+      <form method="dialog" className="add-new-task-modal-content">
         <h2 className="add-new-task-header">Add New Task</h2>
         <label>
           <p className="add-new-task-title">Title</p>
@@ -339,45 +343,43 @@ function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRe
     const formData = new FormData(e.target);
     const formObj = Object.fromEntries(formData);
     const newTaskObj = {
-      "id": task.id,
-      "title": formObj.title,
-      "description": formObj.description,
-      "status": formObj.status,
-      "statusId": selectedBoard.columns.find(x => x.name === formObj.status).id,
-      "subtasks": subtasks
-    }
-    const thisColumn = selectedBoard.columns.find(x => x.id === task.statusId);
+      id: task.id,
+      title: formObj.title,
+      description: formObj.description,
+      status: formObj.status,
+      statusId: selectedBoard.columns.find((x) => x.name === formObj.status).id,
+      subtasks: subtasks,
+    };
+    const thisColumn = selectedBoard.columns.find((x) => x.id === task.statusId);
 
     if (formObj.statusId != task.statusId) {
-      thisColumn.tasks = thisColumn.tasks.filter(x => x.id != task.id);
-      const newColumn = selectedBoard.columns.find(x => x.name === formObj.status);
+      thisColumn.tasks = thisColumn.tasks.filter((x) => x.id != task.id);
+      const newColumn = selectedBoard.columns.find((x) => x.name === formObj.status);
       newColumn.tasks.push(newTaskObj);
     } else {
-      thisColumn.tasks[thisColumn.tasks.findIndex(x => x.id === task.id)] = newTaskObj;
-
+      thisColumn.tasks[thisColumn.tasks.findIndex((x) => x.id === task.id)] = newTaskObj;
     }
 
     setData([...data]);
     viewTaskDialogRef.current.close();
     console.log(newTaskObj);
-
   }
   const buttonStyle = {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    textAlign: 'left',
-    justifyContent: 'space-between',
-    border: '1px solid #828FA340',
-    backgroundColor: 'transparent',
-    padding: '9px',
-    borderRadius: '4px',
-    paddingLeft: '16px'
-  }
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    textAlign: "left",
+    justifyContent: "space-between",
+    border: "1px solid #828FA340",
+    backgroundColor: "transparent",
+    padding: "9px",
+    borderRadius: "4px",
+    paddingLeft: "16px",
+  };
 
   return (
     <dialog ref={dialogRef} className="add-new-task-modal" onClick={() => dialogRef.current.close()}>
-      <form onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content" onClick={(e) => e.stopPropagation()} >
+      <form onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="add-new-task-header">Edit Task</h2>
         <label>
           <p className="add-new-task-title">Title</p>
@@ -424,7 +426,6 @@ function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRe
               ))}
             </div>
           )}
-
         </label>
 
         <button type="submit" className="add-new-task-create-task-btn">

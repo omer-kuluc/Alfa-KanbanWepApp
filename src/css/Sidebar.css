@@ -1,13 +1,14 @@
 aside {
-  width: 23vh; 
+  width: 261px; 
   transition: width 0.2s ease-in-out;
-  height: 100vh;
+  height: calc(100vh - 81px);
   background-color: rgba(255, 255, 255, 1);
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 10vh;
+  top: 81px;
   justify-content: space-between;
+  padding-block: 32px;
 }
 
 .side-bar-menu {
@@ -17,7 +18,6 @@ aside {
     line-height: 15.12px;
     letter-spacing: 2.4px;
     color: rgba(130, 143, 163, 1);
-    margin-top: 54px;
     padding-inline: 24px;
     margin-bottom: 20px;
   }
@@ -40,10 +40,12 @@ aside {
   }
 }
 
+.side-bar-hidden-container{
+  padding-left: 24px;
+}
+
 .side-bar-hidden {
   display: flex;
-  padding-inline: 24px;
-  margin-top: 30px;
   gap: 10px;
   background-color: transparent;
   border: none;
@@ -60,8 +62,7 @@ aside {
 .hidden-button {
   position: absolute;
   z-index: 1000;
-  top: 944px;
-
+  bottom: 32px;
 }
 
 .show-sidebar {
@@ -72,13 +73,17 @@ aside {
   background-color: rgba(99, 95, 199, 1);
   border: none;
   cursor: pointer;
-}
-
-.sidebar-down{
-  padding-bottom: 10vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sidebar-hidden aside {
   width: 0;
   overflow: hidden;
+}
+
+.sidebar-down {
+  display: grid;
+  gap: 16px;
 }

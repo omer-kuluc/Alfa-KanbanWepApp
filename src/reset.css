@@ -17,6 +17,7 @@ body {
   -webkit-font-smoothing: antialiased;
   font-family: "Plus Jakarta Sans", system-ui;
   background-color: #F4F7FD;
+  overflow: hidden;
 }
 
 /* 5. Improve media defaults */

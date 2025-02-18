@@ -2,7 +2,8 @@
 .header-mobile {
   display: flex;
   padding-inline: 16px;
-  padding-block: 20px;
+  padding-block: 12px;
+  height: 64px;
   align-items: center;
   justify-content: space-between;
 }
@@ -22,8 +23,6 @@
 .header-addNew-button {
   background-color: rgba(99, 95, 199, 1);
   border: 1px solid transparent;
-  width: 48px;
-  height: 32px;
   border-radius: 24px;
   color: white;
   font-size: 18px;
@@ -70,7 +69,6 @@
 .toggle-container {
   display: flex;
   align-items: center;
-  margin-top: 25px;
   background-color: rgba(244, 247, 253, 1);
   justify-content: center;
   gap: 23px;
@@ -94,8 +92,11 @@
 }
 
 .slider {
+  display: flex;
+  align-items: center;
   position: absolute;
   cursor: pointer;
+  padding: 3px;
   top: 0;
   left: 0;
   right: 0;
@@ -107,11 +108,9 @@
 
 .slider:before {
   content: "";
-  position: absolute;
+  display: inline-block;
   height: 14px;
   width: 14px;
-  left: 2px;
-  bottom: 2.5px;
   background-color: white;
   border-radius: 50%;
   transition: 0.4s;
@@ -239,7 +238,7 @@ input:checked+.slider:before {
 /*  header tablet version start here */
 
 .header-tablet {
-  height: 10vh;
+  height: 81px;
   background-color: rgba(255, 255, 255, 1);
   display: flex;
   justify-content: space-between;
@@ -266,8 +265,8 @@ input:checked+.slider:before {
   align-items: center;
   gap: 15px;
   border-right: 1px solid rgba(228, 235, 250, 1);
-  height: 10vh; 
-  width: 23vh;
+  height: 81px; 
+  width: 261px;
   padding-left: 15px;
 }
 
@@ -319,4 +318,9 @@ input:checked+.slider:before {
   .deleteDot {
     color: rgba(234, 85, 85, 1);
   }
+}
+
+.drop-down-dot{
+  display: flex;
+  align-items: center;
 }

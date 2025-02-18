@@ -1,6 +1,8 @@
 import "../css/Sidebar.css"
+
+import { useContext, useEffect, useState } from "react";
+
 import { Data, } from "../App";
-import { useContext, useState, useEffect } from "react";
 
 export default function Sidebar({ selectedBoard, setSelectedBoard, isHidden, setHidden }) {
   const { data } = useContext(Data);
@@ -42,7 +44,7 @@ export default function Sidebar({ selectedBoard, setSelectedBoard, isHidden, set
                 <img src="./img/moon-logo.svg" alt="Moon" />
               </div>
             </div>
-            <div className="side-bar-hidden">
+            <div className="side-bar-hidden-container">
               <button className="side-bar-hidden" onClick={() => setHidden(true)}>
                 <img src="./img/hidden-logo.svg" alt="" />
                 <p>Hide Sidebar</p>
