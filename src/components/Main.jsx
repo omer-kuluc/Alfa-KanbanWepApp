@@ -217,7 +217,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
 function AddNewTask({ dialogRef, closeModal }) {
   return (
     <dialog ref={dialogRef} className="add-new-task-modal">
-      <form method="dialog" className="add-new-task-modal-content">
+      <form method="dialog" className="add-new-task-modal-content" >
         <h2 className="add-new-task-header">Add New Task</h2>
         <label>
           <p className="add-new-task-title">Title</p>
@@ -305,13 +305,25 @@ function AddNewBoard({ dialogRef, closeModal }) {
 
 function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRef }) {
   const { data, setData } = useContext(Data);
+  const screenSize = useContext(ScreenSize);
   const dropDownButtonRef = useRef(null);
 
   const [dropdownMenu, setDropdownMenu] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(task?.status);
+  const [dropdownMenuPosition, setDropdownMenuPosition] = useState({ left: 0, top: 0, right: 0 });
+
+  useEffect(() => {
+    setDropdownMenuPosition({
+      left: dropDownButtonRef.current.getBoundingClientRect().left,
+      top: dropDownButtonRef.current.getBoundingClientRect().bottom + 16,
+      right: screenSize - dropDownButtonRef.current.getBoundingClientRect().right,
+    });
+  }, [task, screenSize, dropdownMenu]);
 
   const [subtasks, setSubtasks] = useState(task?.subtasks || []);
   useEffect(() => {
     setSubtasks(task?.subtasks || []);
+    setCurrentStatus(task?.status);
   }, [task]);
 
   function handleRemoveSubtasks(i) {
@@ -350,14 +362,22 @@ function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRe
     console.log(newTaskObj);
 
   }
-
-
-
-
+  const buttonStyle = {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'left',
+    justifyContent: 'space-between',
+    border: '1px solid #828FA340',
+    backgroundColor: 'transparent',
+    padding: '9px',
+    borderRadius: '4px',
+    paddingLeft: '16px'
+  }
 
   return (
-    <dialog ref={dialogRef} className="add-new-task-modal">
-      <form onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content">
+    <dialog ref={dialogRef} className="add-new-task-modal" onClick={() => dialogRef.current.close()}>
+      <form onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content" onClick={(e) => e.stopPropagation()} >
         <h2 className="add-new-task-header">Edit Task</h2>
         <label>
           <p className="add-new-task-title">Title</p>
@@ -391,14 +411,14 @@ function EditTask({ dialogRef, closeModal, task, selectedBoard, viewTaskDialogRe
            {selectedBoard.columns.map((x
             => <option key={x.id}>{x.name}</option>))}
           </select> */}
-          <button ref={dropDownButtonRef} onClick={() => setDropdownMenu(!dropdownMenu)}>
-            {task?.status}
+          <button style={buttonStyle} type="button" ref={dropDownButtonRef} onClick={() => setDropdownMenu(!dropdownMenu)}>
+            {currentStatus}
             <img src="/img/bottom-arrow.svg" />
           </button>
           {dropdownMenu && (
             <div className="view-task-current-status-dropdown-contents" style={dropdownMenuPosition}>
               {selectedBoard.columns.map((column) => (
-                <button key={column.id}>
+                <button type="button" key={column.id} onClick={() => setCurrentStatus(column.name)}>
                   {column.name}
                 </button>
               ))}
