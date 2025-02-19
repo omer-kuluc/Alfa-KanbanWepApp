@@ -11,21 +11,28 @@ main {
   gap: 24px;
   padding: 24px 16px;
   width: min-content;
+  height: 100%;
+
   .main-grid-column-item:nth-child(1) .main-grid-column-title::before {
     background-color: #49c4e5;
   }
+
   .main-grid-column-item:nth-child(2) .main-grid-column-title::before {
     background-color: #8471f2;
   }
+
   .main-grid-column-item:nth-child(3) .main-grid-column-title::before {
     background-color: #67e2ae;
   }
+
   .main-grid-column-item:nth-child(4) .main-grid-column-title::before {
     background-color: #e5a449;
   }
+
   .main-grid-column-item:nth-child(5) .main-grid-column-title::before {
     background-color: #2a3fdb;
   }
+
   .main-grid-column-item:nth-child(6) .main-grid-column-title::before {
     background-color: #c36e6e;
   }
@@ -47,6 +54,7 @@ main {
   line-height: 15.12px;
   letter-spacing: 2.4px;
   color: #828fa3;
+
   &::before {
     content: "";
     display: inline-block;
@@ -72,16 +80,19 @@ main {
   box-shadow: 0px 4px 6px 0px #364e7e1a;
   border-radius: 8px;
   cursor: pointer;
+
   &:hover {
     h2 {
       color: #635fc7;
     }
   }
+
   h2 {
     font-size: 15px;
     line-height: 18.9px;
     color: #000112;
   }
+
   p {
     font-weight: 700;
     font-size: 12px;
@@ -99,6 +110,7 @@ main {
   background: linear-gradient(180deg, #e9effa 0%, rgba(233, 239, 250, 0.5) 100%);
   border-radius: 6px;
   cursor: pointer;
+
   button {
     font-weight: 700;
     font-size: 24px;
@@ -107,6 +119,7 @@ main {
     border: none;
     background-color: transparent;
   }
+
   &:hover {
     button {
       color: #635fc7;
@@ -140,6 +153,7 @@ main {
   font-weight: 700;
   font-size: 15px;
   line-height: 18.9px;
+
   &:hover {
     background-color: #a8a4ff;
   }
@@ -151,6 +165,7 @@ main {
   border-radius: 6px;
   padding: 0;
   width: 100%;
+
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.5);
   }
@@ -176,20 +191,24 @@ main {
 .view-task-subtask-contents {
   display: grid;
   gap: 16px;
+
   ul {
     list-style: none;
     padding: 0;
     display: grid;
     gap: 8px;
+
     li {
       padding: 16px 8px;
       background-color: #f4f7fd;
       border-radius: 4px;
       color: #000112;
+
       &:hover {
         background-color: rgba(98, 95, 199, 0.25);
       }
     }
+
     .completed {
       label {
         color: rgba(0, 1, 18, 0.5);
@@ -237,7 +256,7 @@ main {
 }
 
 /* When the checkbox is checked, add a blue background */
-.view-task-subtask-contents ul li label input:checked ~ .checkmark {
+.view-task-subtask-contents ul li label input:checked~.checkmark {
   background-color: #635fc7;
 }
 
@@ -249,7 +268,7 @@ main {
 }
 
 /* Show the checkmark when checked */
-.view-task-subtask-contents ul li label input:checked ~ .checkmark:after {
+.view-task-subtask-contents ul li label input:checked~.checkmark:after {
   display: block;
 }
 
@@ -269,7 +288,8 @@ main {
 .view-task-current-status-contents {
   display: grid;
   gap: 8px;
-  > button {
+
+  >button {
     color: #000112;
     font-weight: 500;
     font-size: 13px;
@@ -293,6 +313,7 @@ main {
   gap: 8px;
   padding: 16px;
   border-radius: 8px;
+
   button {
     width: 100%;
     font-weight: 500;
@@ -309,6 +330,7 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   button {
     background-color: transparent;
     border: none;
@@ -323,19 +345,23 @@ main {
   border-radius: 8px;
   display: grid;
   gap: 16px;
+
   button {
     text-align: left;
     font-weight: 500;
     font-size: 13px;
     line-height: 23px;
+
     &:first-child {
       color: #828fa3;
     }
+
     &:last-child {
       color: #ea5555;
     }
   }
 }
+
 /* Furkan end */
 
 /*omer baslangic*/
@@ -343,9 +369,11 @@ main {
 .add-new-task-modal,
 .delete-modal {
   margin: auto;
+
   &::backdrop {
     background-color: rgba(0, 0, 0, 0.502);
   }
+
   border-style: none;
   border-radius: 6px;
   padding: 0;
@@ -354,6 +382,7 @@ main {
 
 .add-new-task-modal,
 .add-new-board-modal {
+
   input,
   textarea,
   select {
@@ -361,8 +390,12 @@ main {
     border: 1px solid #828fa340;
     border-radius: 4px;
     padding-left: 16px;
-    margin-bottom: 24px;
     padding-block: 8px;
+    color: rgba(0, 1, 18, 1);
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 23px;
+    resize: none;
   }
 }
 
@@ -507,7 +540,7 @@ main {
 }
 
 main {
-  margin-left: 261px;
+  margin-left: 280px;
   transition: all 0.3s ease-in-out;
 }
 
@@ -528,21 +561,28 @@ main {
   padding-left: 16px;
 }
 
+.columns-group{
+  display: grid;
+  gap: 12px;
+}
 
 @media (width >=768px) {
 
   main {
     height: calc(100vh - 81px);
   }
-  
-  
-  
-  
-  
-  
-  
 
-  
+  dialog {
+    width: 480px !important;
+  }
+
+
+
+
+
+
+
+
 
 
 

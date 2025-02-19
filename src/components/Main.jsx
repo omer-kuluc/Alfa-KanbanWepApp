@@ -43,7 +43,6 @@ export default function Main() {
   function handleNewColumn() {
     setIsNewColumn(true);
     editBoardDialogRef.current.showModal();
-
   }
 
   return (
@@ -88,7 +87,7 @@ export default function Main() {
         </main>
       </div>
       <AddNewTask dialogRef={taskDialogRef} selectedBoard={selectedBoard} screenHeight={screenHeight} />
-      <AddNewBoard dialogRef={boardDialogRef} />
+      <AddNewBoard dialogRef={boardDialogRef} setSelectedBoard={setSelectedBoard}/>
       <EditTask dialogRef={editTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} screenHeight={screenHeight} />
       <EditBoard isNewColumn={isNewColumn} dialogRef={editBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} />
       <DeleteModal dialogRef={deleteDialogRef} viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} />
@@ -129,7 +128,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
     setDotDropdownMenuPosition({
       left: dotDropDownButtonRef.current.getBoundingClientRect().left - 96,
       top: dotDropDownButtonRef.current.getBoundingClientRect().bottom + 16,
-      right: 0,
+      right: screenSize<768 ? 0 : (screenSize- dotDropDownButtonRef.current.getBoundingClientRect().right)-64,
     });
   }, [dropdownMenu, screenSize, task, dotDropdownMenu, screenHeight]);
 
@@ -204,7 +203,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
 }
 
 // Add New Task Modal
-function AddNewTask({ dialogRef, closeModal, selectedBoard, screenHeight }) {
+function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
   const { data, setData } = useContext(Data);
   const screenSize = useContext(ScreenSize);
   const dropDownButtonRef = useRef(null);
@@ -270,19 +269,21 @@ function AddNewTask({ dialogRef, closeModal, selectedBoard, screenHeight }) {
 
         <label>
           <p className="add-new-task-description">Description</p>
-          <textarea name="description" placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."></textarea>
+          <textarea name="description" placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little." rows={4}></textarea>
         </label>
 
         <label>
           <p className="add-new-task-subtasks">Subtasks</p>
-          {subtasks?.map((subtask, i) => (
-            <div key={i} className="add-new-task-first-subtask">
-              <input type="text" placeholder="e.g. Make coffee" value={subtask.title} onChange={(e) => handleChangeSubtasks(e, i)} />
-              <button type="button" onClick={() => handleRemoveSubtasks(i)}>
-                <img src="/img/cross-icon.svg " />
-              </button>
-            </div>
-          ))}
+          <div className="columns-group">
+            {subtasks?.map((subtask, i) => (
+              <div key={i} className="add-new-task-first-subtask">
+                <input type="text" placeholder="e.g. Make coffee" value={subtask.title} onChange={(e) => handleChangeSubtasks(e, i)} />
+                <button type="button" onClick={() => handleRemoveSubtasks(i)}>
+                  <img src="/img/cross-icon.svg " />
+                </button>
+              </div>
+            ))}
+          </div>
         </label>
 
         <button type="button" className="add-new-subtask-btn" onClick={() => setSubtasks([...subtasks, { title: "", isCompleted: false }])}>
@@ -315,37 +316,81 @@ function AddNewTask({ dialogRef, closeModal, selectedBoard, screenHeight }) {
 }
 
 // Add New Board Modal
-function AddNewBoard({ dialogRef, closeModal }) {
+function AddNewBoard({ dialogRef,setSelectedBoard }) {
+  const { data, setData } = useContext(Data);
+  const [columns, setColumns] = useState([{
+    id: crypto.randomUUID(),
+    name: "",
+    tasks: []
+  }])
+
+  function handleAddColumn() {
+    if (columns.length < 6) {
+      setColumns([...columns, {
+        id: crypto.randomUUID(),
+        name: "",
+        tasks: []
+      }])
+    }
+  }
+
+  function handleSubmit(e) {
+    const formData = new FormData(e.target);
+    const formObj = Object.fromEntries(formData);
+    const filteredColumns = columns.filter(x => x.name.trim() !== "")
+    const newBoardObj = {
+      id: crypto.randomUUID(),
+      name: formObj.name,
+      columns: filteredColumns
+    }
+    setData([...data, newBoardObj])
+    e.target.reset();
+    setColumns([{
+      id: crypto.randomUUID(),
+      name: "",
+      tasks: []
+    }])
+    setSelectedBoard(newBoardObj)
+  }
+
+  function handleChangeColumns(e, i) {
+    columns[i].name = e.target.value;
+    setColumns([...columns])
+  }
+
   return (
-    <dialog ref={dialogRef} className="add-new-board-modal">
-      <form method="dialog" className="add-new-board-modal-content">
+    <dialog ref={dialogRef} className="add-new-board-modal" onClick={() => dialogRef.current.close()}>
+      <form method="dialog" className="add-new-board-modal-content" onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit}>
         <h2 className="add-new-board-header">Add New Board</h2>
 
         <label>
           <p className="add-new-board-name">Board Name</p>
-          <input type="text" placeholder="e.g. Web Design" required />
+          <input type="text" placeholder="e.g. Web Design" required defaultValue={"My Board"} name="name" />
         </label>
 
         <label>
           <p className="add-new-board-board-columns">Board Columns</p>
-          <div className="first-board-column">
-            <input type="text" placeholder="Todo" />
-            <img src="/img/cross-icon.svg " />
+          <div className="columns-group">
+            {
+              columns.map((x, i) => (
+                <div className="first-board-column" key={x.id}>
+                  <input type="text" placeholder="Todo" value={x.name} onChange={(e) => handleChangeColumns(e, i)} />
+                  <button onClick={() => setColumns(columns.filter(y => y.id !== x.id))}><img src="/img/cross-icon.svg " /></button>
+                </div>
+              ))
+            }
           </div>
-          <div className="second-board-column">
-            <input type="text" placeholder="Doing" />
-            <img src="/img/cross-icon.svg " />
-          </div>
-          <button type="button" className="add-new-board-add-column-btn">
-            + Add New Column
-          </button>
+          {
+            columns.length < 6 &&
+            <button type="button" className="add-new-board-add-column-btn" onClick={handleAddColumn}>
+              + Add New Column
+            </button>
+          }
+
         </label>
 
         <button type="submit" className="add-new-board-create-board-btn">
           Create New Board
-        </button>
-        <button type="button" onClick={closeModal} className="close-modal-btn">
-          Close
         </button>
       </form>
     </dialog>
@@ -426,19 +471,21 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
 
         <label>
           <p className="add-new-task-description">Description</p>
-          <textarea name="description" defaultValue={task?.description} placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."></textarea>
+          <textarea rows={4} name="description" defaultValue={task?.description} placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."></textarea>
         </label>
 
         <label>
           <p className="add-new-task-subtasks">Subtasks</p>
-          {subtasks?.map((subtask, i) => (
-            <div key={i} className="add-new-task-first-subtask">
-              <input type="text" placeholder="e.g. Make coffee" value={subtask.title} onChange={(e) => handleChangeSubtasks(e, i)} />
-              <button type="button" onClick={() => handleRemoveSubtasks(i)}>
-                <img src="/img/cross-icon.svg " />
-              </button>
-            </div>
-          ))}
+          <div className="columns-group">
+            {subtasks?.map((subtask, i) => (
+              <div key={i} className="add-new-task-first-subtask">
+                <input type="text" placeholder="e.g. Make coffee" value={subtask.title} onChange={(e) => handleChangeSubtasks(e, i)} />
+                <button type="button" onClick={() => handleRemoveSubtasks(i)}>
+                  <img src="/img/cross-icon.svg " />
+                </button>
+              </div>
+            ))}
+          </div>
         </label>
 
         <button type="button" className="add-new-subtask-btn" onClick={() => setSubtasks([...subtasks, { title: "", isCompleted: false }])}>
@@ -536,14 +583,16 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard }) 
 
         <label>
           <p className="add-new-board-board-columns">Board Columns</p>
-          {edittingBoard.columns.map((column, i) => (
-            <div className="first-board-column" key={column.id}>
-              <input type="text" placeholder="Todo" value={column.name} onChange={(e) => handleColumnChange(e, i)} />
-              <button type="button" onClick={() => handleRemoveColumn(column.id)}>
-                <img src="/img/cross-icon.svg" />
-              </button>
-            </div>
-          ))}
+          <div className="columns-group">
+            {edittingBoard.columns.map((column, i) => (
+              <div className="first-board-column" key={column.id}>
+                <input type="text" placeholder="Todo" value={column.name} onChange={(e) => handleColumnChange(e, i)} />
+                <button type="button" onClick={() => handleRemoveColumn(column.id)}>
+                  <img src="/img/cross-icon.svg" />
+                </button>
+              </div>
+            ))}
+          </div>
           {edittingBoard.columns.length < 6 && (
             <button type="button" className="add-new-board-add-column-btn" onClick={handleAddNewColumn}>
               + Add New Column

@@ -274,7 +274,7 @@ input:checked+.slider:before {
   gap: 15px;
   border-right: 1px solid rgba(228, 235, 250, 1);
   height: 81px; 
-  width: 261px;
+  width: 280px;
   padding-left: 15px;
 }
 
