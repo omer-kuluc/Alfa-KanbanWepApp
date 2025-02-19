@@ -110,6 +110,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
   function handleSubTask(i) {
     task.subtasks[i].isCompleted = !task.subtasks[i].isCompleted;
     setData([...data]);
+    toast.success("Subtask status changed successfully.");
   }
 
   useEffect(() => {
@@ -140,6 +141,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
     newSelectedBoardColumn.tasks.push(task);
     setData([...data]);
     setDropdownMenu(false);
+    toast.success("Task status changed successfully.");
   }
 
   function handleCloseModal() {
@@ -243,6 +245,7 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
     setData([...data]);
     e.target.reset();
     setSubtasks([{ title: "", isCompleted: false }]);
+    toast.success("Task created successfully.");
   }
 
   function handleChangeSubtasks(e, i) {
@@ -368,6 +371,7 @@ function AddNewBoard({ dialogRef, setSelectedBoard }) {
       },
     ]);
     setSelectedBoard(newBoardObj);
+    toast.success("Board created successfully.");
   }
 
   function handleChangeColumns(e, i) {
@@ -468,6 +472,7 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
 
     setData([...data]);
     viewTaskDialogRef.current.close();
+    toast.success("Task updated successfully.");
   }
 
   function handleChangeStatus(newStatus) {
@@ -579,6 +584,7 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard }) 
     selectedBoard.name = edittingBoard.name;
     selectedBoard.columns = edittingBoard.columns;
     setData([...data]);
+    toast.success("Board updated successfully.");
   }
 
   function handleReset() {
@@ -666,6 +672,7 @@ function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard }) {
       setSelectedBoard(newData[0]);
       return newData;
     });
+    toast.success("Board deleted successfully.");
   }
 
   return (
