@@ -70,11 +70,11 @@ export default function Main() {
                   </ul>
                 </div>
               ))}
-              {selectedBoard.columns.length < 6 &&
+              {selectedBoard.columns.length < 6 && (
                 <div className="main-grid-column-new-column" onClick={handleNewColumn}>
                   <button>+ New Column</button>
                 </div>
-              }
+              )}
             </div>
           ) : (
             <div className="main-grid-column-empty-state">
@@ -87,13 +87,12 @@ export default function Main() {
         </main>
       </div>
       <AddNewTask dialogRef={taskDialogRef} selectedBoard={selectedBoard} screenHeight={screenHeight} />
-      <AddNewBoard dialogRef={boardDialogRef} setSelectedBoard={setSelectedBoard}/>
+      <AddNewBoard dialogRef={boardDialogRef} setSelectedBoard={setSelectedBoard} />
       <EditTask dialogRef={editTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} screenHeight={screenHeight} />
       <EditBoard isNewColumn={isNewColumn} dialogRef={editBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} />
       <DeleteModal dialogRef={deleteDialogRef} viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} />
       <DeleteBoardModal dialogRef={deleteBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} />
       <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} screenHeight={screenHeight} />
-
     </>
   );
 }
@@ -128,7 +127,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
     setDotDropdownMenuPosition({
       left: dotDropDownButtonRef.current.getBoundingClientRect().left - 96,
       top: dotDropDownButtonRef.current.getBoundingClientRect().bottom + 16,
-      right: screenSize<768 ? 0 : (screenSize- dotDropDownButtonRef.current.getBoundingClientRect().right)-64,
+      right: screenSize < 768 ? 0 : screenSize - dotDropDownButtonRef.current.getBoundingClientRect().right - 64,
     });
   }, [dropdownMenu, screenSize, task, dotDropdownMenu, screenHeight]);
 
@@ -204,6 +203,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
 
 // Add New Task Modal
 function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
+  const formRef = useRef(null);
   const { data, setData } = useContext(Data);
   const screenSize = useContext(ScreenSize);
   const dropDownButtonRef = useRef(null);
@@ -214,7 +214,7 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
 
   useEffect(() => {
     setCurrentStatus(selectedBoard.columns[0]?.name);
-  }, [selectedBoard]);
+  }, [selectedBoard, data]);
 
   useEffect(() => {
     setDropdownMenuPosition({
@@ -227,6 +227,9 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
   function handleSubmit(e) {
     const formData = new FormData(e.target);
     const formObje = Object.fromEntries(formData);
+    if (selectedBoard.columns.length === 0) {
+      return toast.error("You need to create a column first.");
+    }
     const foundedColumn = selectedBoard.columns.find((x) => x.name === currentStatus);
     const newTaskObj = {
       id: crypto.randomUUID(),
@@ -258,9 +261,16 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
     setTimeout(() => setDropdownMenu(false), 100);
   }
 
+  function handleReset() {
+    dialogRef.current.close();
+    setSubtasks([{ title: "", isCompleted: false }]);
+    setCurrentStatus(selectedBoard.columns[0]?.name);
+    formRef.current.reset();
+  }
+
   return (
-    <dialog ref={dialogRef} className="add-new-task-modal" onClick={() => dialogRef.current.close()}>
-      <form onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content" onClick={(e) => e.stopPropagation()}>
+    <dialog ref={dialogRef} className="add-new-task-modal" onClick={handleReset}>
+      <form ref={formRef} onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="add-new-task-header">Add New Task</h2>
         <label>
           <p className="add-new-task-title">Title</p>
@@ -292,8 +302,8 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
 
         <label>
           <p className="add-new-task-status">Status</p>
-          <button className="main-drop-down-btn" type="button" ref={dropDownButtonRef} onClick={() => setDropdownMenu(!dropdownMenu)}>
-            {currentStatus}
+          <button className="main-drop-down-btn" type="button" disabled={selectedBoard.columns.length === 0} ref={dropDownButtonRef} onClick={() => setDropdownMenu(!dropdownMenu)}>
+            {selectedBoard.columns.length > 0 ? currentStatus : "-"}
             <img src="/img/bottom-arrow.svg" />
           </button>
           {dropdownMenu && (
@@ -316,46 +326,53 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
 }
 
 // Add New Board Modal
-function AddNewBoard({ dialogRef,setSelectedBoard }) {
+function AddNewBoard({ dialogRef, setSelectedBoard }) {
   const { data, setData } = useContext(Data);
-  const [columns, setColumns] = useState([{
-    id: crypto.randomUUID(),
-    name: "",
-    tasks: []
-  }])
+  const [columns, setColumns] = useState([
+    {
+      id: crypto.randomUUID(),
+      name: "",
+      tasks: [],
+    },
+  ]);
 
   function handleAddColumn() {
     if (columns.length < 6) {
-      setColumns([...columns, {
-        id: crypto.randomUUID(),
-        name: "",
-        tasks: []
-      }])
+      setColumns([
+        ...columns,
+        {
+          id: crypto.randomUUID(),
+          name: "",
+          tasks: [],
+        },
+      ]);
     }
   }
 
   function handleSubmit(e) {
     const formData = new FormData(e.target);
     const formObj = Object.fromEntries(formData);
-    const filteredColumns = columns.filter(x => x.name.trim() !== "")
+    const filteredColumns = columns.filter((x) => x.name.trim() !== "");
     const newBoardObj = {
       id: crypto.randomUUID(),
       name: formObj.name,
-      columns: filteredColumns
-    }
-    setData([...data, newBoardObj])
+      columns: filteredColumns,
+    };
+    setData([...data, newBoardObj]);
     e.target.reset();
-    setColumns([{
-      id: crypto.randomUUID(),
-      name: "",
-      tasks: []
-    }])
-    setSelectedBoard(newBoardObj)
+    setColumns([
+      {
+        id: crypto.randomUUID(),
+        name: "",
+        tasks: [],
+      },
+    ]);
+    setSelectedBoard(newBoardObj);
   }
 
   function handleChangeColumns(e, i) {
     columns[i].name = e.target.value;
-    setColumns([...columns])
+    setColumns([...columns]);
   }
 
   return (
@@ -371,22 +388,20 @@ function AddNewBoard({ dialogRef,setSelectedBoard }) {
         <label>
           <p className="add-new-board-board-columns">Board Columns</p>
           <div className="columns-group">
-            {
-              columns.map((x, i) => (
-                <div className="first-board-column" key={x.id}>
-                  <input type="text" placeholder="Todo" value={x.name} onChange={(e) => handleChangeColumns(e, i)} />
-                  <button onClick={() => setColumns(columns.filter(y => y.id !== x.id))}><img src="/img/cross-icon.svg " /></button>
-                </div>
-              ))
-            }
+            {columns.map((x, i) => (
+              <div className="first-board-column" key={x.id}>
+                <input type="text" placeholder="Todo" value={x.name} onChange={(e) => handleChangeColumns(e, i)} />
+                <button onClick={() => setColumns(columns.filter((y) => y.id !== x.id))}>
+                  <img src="/img/cross-icon.svg " />
+                </button>
+              </div>
+            ))}
           </div>
-          {
-            columns.length < 6 &&
+          {columns.length < 6 && (
             <button type="button" className="add-new-board-add-column-btn" onClick={handleAddColumn}>
               + Add New Column
             </button>
-          }
-
+          )}
         </label>
 
         <button type="submit" className="add-new-board-create-board-btn">
@@ -522,9 +537,8 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard }) 
   const [edittingBoard, setEdittingBoard] = useState({ ...selectedBoard });
 
   useEffect(() => {
-    setEdittingBoard({ ...selectedBoard })
-
-  }, [selectedBoard])
+    setEdittingBoard({ ...selectedBoard });
+  }, [selectedBoard]);
 
   function handleColumnChange(e, index) {
     edittingBoard.columns[index].name = e.target.value;
@@ -561,7 +575,7 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard }) 
   }
 
   function handleSubmit() {
-    edittingBoard.columns = edittingBoard.columns.filter(x => x.name.trim() !== "");
+    edittingBoard.columns = edittingBoard.columns.filter((x) => x.name.trim() !== "");
     selectedBoard.name = edittingBoard.name;
     selectedBoard.columns = edittingBoard.columns;
     setData([...data]);
@@ -575,7 +589,7 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard }) 
   return (
     <dialog ref={dialogRef} className="add-new-board-modal" onClick={handleReset}>
       <form onSubmit={handleSubmit} method="dialog" className="add-new-board-modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="add-new-board-header">{isNewColumn ? 'Add New Column' : 'Edit Board'}</h2>
+        <h2 className="add-new-board-header">{isNewColumn ? "Add New Column" : "Edit Board"}</h2>
         <label>
           <p className="add-new-board-name">Board Name</p>
           <input disabled={isNewColumn} type="text" placeholder="e.g. Web Design" required value={edittingBoard.name} onChange={(e) => setEdittingBoard({ ...edittingBoard, name: e.target.value })} />
@@ -635,26 +649,23 @@ function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedB
   );
 }
 
-
 function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard }) {
   const { data, setData } = useContext(Data);
 
   function handleConfirmDelete() {
     setData((prev) => {
-      const newData = prev.filter(x => x.id !== selectedBoard.id);
+      const newData = prev.filter((x) => x.id !== selectedBoard.id);
       if (newData.length === 0) {
-        newData.push(
-          {
-            id: crypto.randomUUID(),
-            name: 'My Board',
-            columns: []
-          }
-        )
+        newData.push({
+          id: crypto.randomUUID(),
+          name: "My Board",
+          columns: [],
+        });
         console.log(newData);
       }
       setSelectedBoard(newData[0]);
       return newData;
-    })
+    });
   }
 
   return (
