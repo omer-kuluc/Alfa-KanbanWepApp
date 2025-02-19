@@ -16,14 +16,11 @@ export default function App() {
 
     window.addEventListener("resize", () => setScreenSize(window.innerWidth));
   }, []);
-  
+
   return (
     <ScreenSize.Provider value={screenSize}>
       <Data.Provider value={{ data, setData }}>
-        <Toaster 
-          position="top-center"
-          reverseOrder={false}
-        />
+        <Toaster position="top-center" reverseOrder={false} />
         {data.length > 0 && <Main />}
       </Data.Provider>
     </ScreenSize.Provider>
