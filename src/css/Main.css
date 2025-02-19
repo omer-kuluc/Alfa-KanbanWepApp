@@ -38,6 +38,65 @@ main {
   }
 }
 
+.dark-mode-main {
+  background-color: rgba(32, 33, 44, 1);
+
+  dialog {
+    background-color: rgba(32, 33, 44, 1);
+  }
+}
+
+.main-grid-column-group-dark {
+  display: grid;
+  align-items: start;
+  gap: 24px;
+  padding: 24px 16px;
+  width: min-content;
+  height: 100%;
+  background-color: rgba(32, 33, 44, 1);
+
+  .main-grid-column-item:nth-child(1) .main-grid-column-title::before {
+    background-color: #49c4e5;
+  }
+
+  .main-grid-column-item:nth-child(2) .main-grid-column-title::before {
+    background-color: #8471f2;
+  }
+
+  .main-grid-column-item:nth-child(3) .main-grid-column-title::before {
+    background-color: #67e2ae;
+  }
+
+  .main-grid-column-item:nth-child(4) .main-grid-column-title::before {
+    background-color: #e5a449;
+  }
+
+  .main-grid-column-item:nth-child(5) .main-grid-column-title::before {
+    background-color: #2a3fdb;
+  }
+
+  .main-grid-column-item:nth-child(6) .main-grid-column-title::before {
+    background-color: #c36e6e;
+  }
+
+  .main-grid-column-item-list-item {
+    background-color: rgba(43, 44, 55, 1);
+
+    h2 {
+      color: white;
+    }
+
+    p {
+      color: rgba(130, 143, 163, 1);
+    }
+  }
+
+  .main-grid-column-new-column {
+    background: linear-gradient(180deg, rgba(43, 44, 55, 0.25) 0%, rgba(43, 44, 55, 0.125) 100%);
+
+  }
+}
+
 .main-grid-column-item {
   display: grid;
   align-items: start;
@@ -256,7 +315,7 @@ main {
 }
 
 /* When the checkbox is checked, add a blue background */
-.view-task-subtask-contents ul li label input:checked ~ .checkmark {
+.view-task-subtask-contents ul li label input:checked~.checkmark {
   background-color: #635fc7;
 }
 
@@ -268,7 +327,7 @@ main {
 }
 
 /* Show the checkmark when checked */
-.view-task-subtask-contents ul li label input:checked ~ .checkmark:after {
+.view-task-subtask-contents ul li label input:checked~.checkmark:after {
   display: block;
 }
 
@@ -289,7 +348,7 @@ main {
   display: grid;
   gap: 8px;
 
-  > button {
+  >button {
     color: #000112;
     font-weight: 500;
     font-size: 13px;
@@ -382,6 +441,7 @@ main {
 
 .add-new-task-modal,
 .add-new-board-modal {
+
   input,
   textarea,
   select {
@@ -395,6 +455,7 @@ main {
     font-size: 13px;
     line-height: 23px;
     resize: none;
+
     &:disabled {
       color: rgba(0, 1, 18, 0.50);
     }
@@ -568,6 +629,7 @@ main {
   gap: 12px;
 }
 
+
 @media (width >=768px) {
   main {
     height: calc(100vh - 81px);
@@ -575,5 +637,65 @@ main {
 
   dialog {
     width: 480px !important;
+  }
+}
+
+.dark {
+  background-color: rgba(43, 44, 55, 1);
+
+  input {
+    background-color: rgba(43, 44, 55, 1);
+    color: white;
+  }
+
+  textarea {
+    background-color: rgba(43, 44, 55, 1);
+
+  }
+
+  h2 {
+    color: white;
+  }
+
+  p {
+    color: white;
+  }
+
+  .add-new-subtask-btn {
+    background-color: rgba(255, 255, 255, 1);
+    color: #635fc7;
+  }
+
+  .main-drop-down-btn {
+    color: white;
+  }
+
+  .view-task-current-status-dropdown-contents {
+    box-shadow: 0px 10px 20px 0px rgba(54, 78, 126, 0.25);
+    background-color: rgba(32, 33, 44, 1);
+  }
+
+  .add-new-board-add-column-btn {
+    background-color: rgba(255, 255, 255, 1);
+    color: #635fc7;
+  }
+
+  input::placeholder {
+    color: gray;
+  }
+
+
+  .cancel-delete-board-btn {
+    background-color: white;
+  }
+
+  li {
+    background-color: rgba(32, 33, 44, 1);
+  }
+
+  .view-task-contents-interactions {
+    background-color: rgba(32, 33, 44, 1);
+    box-shadow: 0px 10px 20px 0px rgba(54, 78, 126, 0.25);
+
   }
 }

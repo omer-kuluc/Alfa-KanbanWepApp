@@ -89,3 +89,32 @@ aside {
   display: grid;
   gap: 16px;
 }
+
+.side-bar-dark{
+
+  aside {
+    width: 280px; 
+    transition: width 0.2s ease-in-out;
+    height: calc(100vh - 81px);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 81px;
+    justify-content: space-between;
+    padding-block: 32px;
+    background-color: rgba(43, 44, 55, 1);
+  }
+  .toggle-container{
+    background-color: rgba(32, 33, 44, 1);
+
+  }
+  .side-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-right: 1px solid rgba(43, 44, 55, 1);
+    height: 81px;
+    width: 280px;
+    padding-left: 15px;
+}
+}

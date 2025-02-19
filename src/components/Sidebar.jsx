@@ -4,12 +4,13 @@ import { useContext, useEffect, useState } from "react";
 
 import { Data, } from "../App";
 
-export default function Sidebar({ selectedBoard, setSelectedBoard, isHidden, setHidden, newBoardDialogRef }) {
+export default function Sidebar({ selectedBoard, setSelectedBoard, isHidden, setHidden, newBoardDialogRef,setDarkMode,darkMode }) {
   const { data } = useContext(Data);
 
   return (
     <>
-      {isHidden ? (
+    <div className={darkMode ? "side-bar-dark" : "side-bar"}>
+    {isHidden ? (
         <div className="hidden-button">
           <button className="show-sidebar" onClick={() => setHidden(false)}>
             <img src="./img/eye.svg" />
@@ -40,12 +41,12 @@ export default function Sidebar({ selectedBoard, setSelectedBoard, isHidden, set
           <div className="sidebar-down">
             <div className="side-bar-toggle">
               <div className="toggle-container">
-                <img src="./img/sun-logo.svg" alt="Sun" />
+              <img src="./img/moon-logo.svg" alt="Moon" />
                 <label className="toggle">
-                  <input type="checkbox" />
+                  <input type="checkbox"  onClick={() => setDarkMode(!darkMode)}/>
                   <span className="slider"></span>
                 </label>
-                <img src="./img/moon-logo.svg" alt="Moon" />
+                <img src="./img/sun-logo.svg" alt="Sun" />
               </div>
             </div>
             <div className="side-bar-hidden-container">
@@ -57,6 +58,8 @@ export default function Sidebar({ selectedBoard, setSelectedBoard, isHidden, set
           </div>
         </aside>
       )}
+    </div>
+
     </>
   );
 }

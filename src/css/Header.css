@@ -230,10 +230,11 @@ input:checked+.slider:before {
   transition: 0.3s ease-in-out;
 }
 
-.header-dropdown-items:not(.active-board):hover{
+.header-dropdown-items:not(.active-board):hover {
   background-color: rgba(99, 95, 199, 0.1);
-  color:  #635FC7;
-  svg{
+  color: #635FC7;
+
+  svg {
     fill: #635FC7;
   }
 }
@@ -273,7 +274,7 @@ input:checked+.slider:before {
   align-items: center;
   gap: 15px;
   border-right: 1px solid rgba(228, 235, 250, 1);
-  height: 81px; 
+  height: 81px;
   width: 280px;
   padding-left: 15px;
 }
@@ -284,7 +285,7 @@ input:checked+.slider:before {
   gap: 24px;
 }
 
-.header-tablet-logo{
+.header-tablet-logo {
   padding-left: 10px;
 }
 
@@ -307,8 +308,8 @@ input:checked+.slider:before {
   height: 94px;
   border-radius: 8px;
   position: absolute;
-  right:-2px;
-  top:calc(100% + 29px);
+  right: -2px;
+  top: calc(100% + 29px);
   padding-inline: 16px;
   padding-bottom: 16px;
   background-color: rgba(255, 255, 255, 1);
@@ -330,8 +331,62 @@ input:checked+.slider:before {
   }
 }
 
-.drop-down-dot{
+.drop-down-dot {
   display: flex;
   align-items: center;
   position: relative;
+}
+
+.dark-header-mobile {
+  display: flex;
+  padding-inline: 16px;
+  padding-block: 12px;
+  height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(43, 44, 55, 1);
+  color: white;
+
+  .toggle-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(43, 44, 55, 1);
+  }
+
+  .dropdown-button {
+    background-color: transparent;
+    color: white;
+  }
+
+  .dropdown-content {
+    position: absolute;
+    background-color: rgba(43, 44, 55, 1);
+  }
+
+  .dot-menu {
+    background-color: rgba(32, 33, 44, 1);
+  }
+}
+
+.header-tablet-dark{
+  background-color: rgba(43, 44, 55, 1);
+  color: white;
+  height: 81px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(62, 63, 78, 1);
+  padding-right: 25px;
+  .side-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-right: 1px solid rgba(43, 44, 55, 1);
+    height: 81px;
+    width: 280px;
+    padding-left: 15px;
+}
+.dot-menu-tablet{
+  background-color:  rgba(43, 44, 55, 1);
+}
 }
