@@ -232,6 +232,7 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
     if (selectedBoard.columns.length === 0) {
       return toast.error("You need to create a column first.");
     }
+    const filteredSubtasks = subtasks.filter((x) => x.title.trim() !== "");
     const foundedColumn = selectedBoard.columns.find((x) => x.name === currentStatus);
     const newTaskObj = {
       id: crypto.randomUUID(),
@@ -239,7 +240,7 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight }) {
       description: formObje.description,
       status: currentStatus,
       statusId: foundedColumn.id,
-      subtasks: subtasks,
+      subtasks: filteredSubtasks,
     };
     foundedColumn.tasks.push(newTaskObj);
     setData([...data]);
@@ -424,6 +425,7 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
   const [dropdownMenu, setDropdownMenu] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(task?.status);
   const [dropdownMenuPosition, setDropdownMenuPosition] = useState({ left: 0, top: 0, right: 0 });
+  const [subtasks, setSubtasks] = useState(task?.subtasks || []);
 
   useEffect(() => {
     setDropdownMenuPosition({
@@ -433,7 +435,6 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
     });
   }, [task, screenSize, dropdownMenu, screenHeight]);
 
-  const [subtasks, setSubtasks] = useState(task?.subtasks || []);
   useEffect(() => {
     setSubtasks(task?.subtasks || []);
     setCurrentStatus(task?.status);
@@ -452,13 +453,14 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
     const formData = new FormData(e.target);
     const formObj = Object.fromEntries(formData);
     const newStatusId = selectedBoard.columns.find((x) => x.name === currentStatus).id;
+    const filteredSubtasks = subtasks.filter((x) => x.title.trim() !== "");
     const newTaskObj = {
       id: task.id,
       title: formObj.title,
       description: formObj.description,
       status: currentStatus,
       statusId: newStatusId,
-      subtasks: subtasks,
+      subtasks: filteredSubtasks,
     };
     const thisColumn = selectedBoard.columns.find((x) => x.id === task.statusId);
 

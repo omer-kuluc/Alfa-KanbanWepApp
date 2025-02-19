@@ -10,12 +10,20 @@ export default function App() {
   const [screenSize, setScreenSize] = useState(window.innerWidth);
 
   useEffect(() => {
-    fetch("/data/data.json")
-      .then((response) => response.json())
-      .then((data) => setData(data.boards));
+    if (localStorage.data) {
+      setData(JSON.parse(localStorage.data));
+    } else {
+      fetch("/data/data.json")
+        .then((response) => response.json())
+        .then((data) => setData(data.boards));
+    }
 
     window.addEventListener("resize", () => setScreenSize(window.innerWidth));
   }, []);
+
+  useEffect(() => {
+    localStorage.data = JSON.stringify(data);
+  }, [data]);
 
   return (
     <ScreenSize.Provider value={screenSize}>
