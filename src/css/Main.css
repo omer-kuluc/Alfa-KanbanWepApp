@@ -10,6 +10,7 @@ main {
   align-items: start;
   gap: 24px;
   padding: 24px 16px;
+  width: min-content;
   .main-grid-column-item:nth-child(1) .main-grid-column-title::before {
     background-color: #49c4e5;
   }
@@ -525,4 +526,24 @@ main {
   padding: 9px;
   border-radius: 4px;
   padding-left: 16px;
+}
+
+
+@media (width >=768px) {
+
+  main {
+    height: calc(100vh - 81px);
+  }
+  
+  
+  
+  
+  
+  
+  
+
+  
+
+
+
 }

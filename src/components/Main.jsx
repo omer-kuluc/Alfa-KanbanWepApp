@@ -16,10 +16,13 @@ export default function Main() {
   const editTaskDialogRef = useRef(null);
   const editBoardDialogRef = useRef(null);
   const deleteDialogRef = useRef(null);
+  const deleteBoardDialogRef = useRef(null);
   const [selectedBoard, setSelectedBoard] = useState(data[0]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [isSidebarHidden, setIsSidebarHidden] = useState(true);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
+  const [isNewColumn, setIsNewColumn] = useState(false);
+
   useEffect(() => {
     window.addEventListener("resize", () => setScreenHeight(window.innerHeight));
   }, []);
@@ -29,7 +32,7 @@ export default function Main() {
   }, [screenSize]);
 
   const columnGroupStyle = {
-    gridTemplateColumns: `repeat(${selectedBoard.columns.length + 1}, ${selectedBoard.columns.length > 0 ? "280px" : "100%"})`,
+    gridTemplateColumns: `repeat(${selectedBoard.columns.length + (selectedBoard.columns.length !== 6 ? 1 : 0)}, ${selectedBoard.columns.length > 0 ? "280px" : "100%"})`,
   };
 
   function handleTaskClick(task) {
@@ -37,53 +40,61 @@ export default function Main() {
     viewTaskDialogRef.current.showModal();
   }
 
+  function handleNewColumn() {
+    setIsNewColumn(true);
+    editBoardDialogRef.current.showModal();
+
+  }
+
   return (
     <>
-      <Header selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} newTaskDialogRef={taskDialogRef} newBoardDialogRef={boardDialogRef} editBoardDialogRef={editBoardDialogRef} deleteDialogRef={deleteDialogRef} />
+      <Header deleteBoardDialogRef={deleteBoardDialogRef} setIsNewColumn={setIsNewColumn} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} newTaskDialogRef={taskDialogRef} newBoardDialogRef={boardDialogRef} editBoardDialogRef={editBoardDialogRef} />
       {screenSize > 768 && <Sidebar selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} isHidden={isSidebarHidden} setHidden={setIsSidebarHidden} newBoardDialogRef={boardDialogRef} />}
       <div className={`app-container ${isSidebarHidden ? "sidebar-hidden" : ""}`}>
         <main>
-          <div className="main-grid-column-group" style={columnGroupStyle}>
-            {selectedBoard.columns.length > 0 ? (
-              <>
-                {selectedBoard.columns.map((column) => (
-                  <div key={column.id} className="main-grid-column-item">
-                    <h2 className="main-grid-column-title">
-                      {column.name} ({column.tasks.length})
-                    </h2>
-                    <ul className="main-grid-column-item-list" style={column.tasks.length === 0 ? { outline: "1px dashed #828fa3", outlineWidth: 2, borderRadius: 6 } : {}}>
-                      {column.tasks.map((task) => (
-                        <li key={task.id} className="main-grid-column-item-list-item" onClick={() => handleTaskClick(task)}>
-                          <h2>{task.title}</h2>
-                          <p>
-                            {task.subtasks.filter((x) => x.isCompleted).length} of {task.subtasks.length} substasks
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-                <div className="main-grid-column-new-column" onClick={() => editBoardDialogRef.current.showModal()}>
+          {selectedBoard.columns.length > 0 ? (
+            <div className="main-grid-column-group" style={columnGroupStyle}>
+              {selectedBoard.columns.map((column) => (
+                <div key={column.id} className="main-grid-column-item">
+                  <h2 className="main-grid-column-title">
+                    {column.name} ({column.tasks.length})
+                  </h2>
+                  <ul className="main-grid-column-item-list" style={column.tasks.length === 0 ? { outline: "1px dashed #828fa3", outlineWidth: 2, borderRadius: 6 } : {}}>
+                    {column.tasks.map((task) => (
+                      <li key={task.id} className="main-grid-column-item-list-item" onClick={() => handleTaskClick(task)}>
+                        <h2>{task.title}</h2>
+                        <p>
+                          {task.subtasks.filter((x) => x.isCompleted).length} of {task.subtasks.length} substasks
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              {selectedBoard.columns.length < 6 &&
+                <div className="main-grid-column-new-column" onClick={handleNewColumn}>
                   <button>+ New Column</button>
                 </div>
-              </>
-            ) : (
-              <div className="main-grid-column-empty-state">
-                <h2 className="main-grid-column-empty-state-text">This board is empty. Create a new column to get started.</h2>
-                <button className="main-grid-column-empty-state-button" onClick={() => editBoardDialogRef.current.showModal()}>
-                  + Add New Column
-                </button>
-              </div>
-            )}
-          </div>
+              }
+            </div>
+          ) : (
+            <div className="main-grid-column-empty-state">
+              <h2 className="main-grid-column-empty-state-text">This board is empty. Create a new column to get started.</h2>
+              <button className="main-grid-column-empty-state-button" onClick={handleNewColumn}>
+                + Add New Column
+              </button>
+            </div>
+          )}
         </main>
       </div>
       <AddNewTask dialogRef={taskDialogRef} selectedBoard={selectedBoard} screenHeight={screenHeight} />
       <AddNewBoard dialogRef={boardDialogRef} />
       <EditTask dialogRef={editTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} screenHeight={screenHeight} />
-      <EditBoard dialogRef={editBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} />
+      <EditBoard isNewColumn={isNewColumn} dialogRef={editBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} />
       <DeleteModal dialogRef={deleteDialogRef} viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} />
+      <DeleteBoardModal dialogRef={deleteBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} />
       <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} screenHeight={screenHeight} />
+
     </>
   );
 }
@@ -199,11 +210,11 @@ function AddNewTask({ dialogRef, closeModal, selectedBoard, screenHeight }) {
   const dropDownButtonRef = useRef(null);
   const [subtasks, setSubtasks] = useState([{ title: "", isCompleted: false }]);
   const [dropdownMenu, setDropdownMenu] = useState(false);
-  const [currentStatus, setCurrentStatus] = useState(selectedBoard.columns[0].name);
+  const [currentStatus, setCurrentStatus] = useState(selectedBoard.columns[0]?.name);
   const [dropdownMenuPosition, setDropdownMenuPosition] = useState({ left: 0, top: 0, right: 0 });
 
   useEffect(() => {
-    setCurrentStatus(selectedBoard.columns[0].name);
+    setCurrentStatus(selectedBoard.columns[0]?.name);
   }, [selectedBoard]);
 
   useEffect(() => {
@@ -459,9 +470,14 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
   );
 }
 
-function EditBoard({ dialogRef, selectedBoard, setSelectedBoard }) {
+function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard }) {
   const { data, setData } = useContext(Data);
   const [edittingBoard, setEdittingBoard] = useState({ ...selectedBoard });
+
+  useEffect(() => {
+    setEdittingBoard({ ...selectedBoard })
+
+  }, [selectedBoard])
 
   function handleColumnChange(e, index) {
     edittingBoard.columns[index].name = e.target.value;
@@ -512,10 +528,10 @@ function EditBoard({ dialogRef, selectedBoard, setSelectedBoard }) {
   return (
     <dialog ref={dialogRef} className="add-new-board-modal" onClick={handleReset}>
       <form onSubmit={handleSubmit} method="dialog" className="add-new-board-modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="add-new-board-header">Edit Board</h2>
+        <h2 className="add-new-board-header">{isNewColumn ? 'Add New Column' : 'Edit Board'}</h2>
         <label>
           <p className="add-new-board-name">Board Name</p>
-          <input type="text" placeholder="e.g. Web Design" required value={edittingBoard.name} onChange={(e) => setEdittingBoard({ ...edittingBoard, name: e.target.value })} />
+          <input disabled={isNewColumn} type="text" placeholder="e.g. Web Design" required value={edittingBoard.name} onChange={(e) => setEdittingBoard({ ...edittingBoard, name: e.target.value })} />
         </label>
 
         <label>
@@ -557,8 +573,46 @@ function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedB
   return (
     <dialog ref={dialogRef} className="delete-modal" onClick={() => dialogRef.current.close()}>
       <form method="dialog" className="delete-modal-content" onClick={(e) => e.stopPropagation()}>
-        <h2 className="delete-header">Delete this board?</h2>
+        <h2 className="delete-header">Delete this task?</h2>
         <p className="delete-message">Are you sure you want to delete the ‘{task?.title}’ board? This action will remove all columns and tasks and cannot be reversed.</p>
+        <button type="submit" className="delete-board-btn" onClick={handleConfirmDelete}>
+          Delete
+        </button>
+        <button type="button" onClick={() => dialogRef.current.close()} className="cancel-delete-board-btn">
+          Cancel
+        </button>
+      </form>
+    </dialog>
+  );
+}
+
+
+function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard }) {
+  const { data, setData } = useContext(Data);
+
+  function handleConfirmDelete() {
+    setData((prev) => {
+      const newData = prev.filter(x => x.id !== selectedBoard.id);
+      if (newData.length === 0) {
+        newData.push(
+          {
+            id: crypto.randomUUID(),
+            name: 'My Board',
+            columns: []
+          }
+        )
+        console.log(newData);
+      }
+      setSelectedBoard(newData[0]);
+      return newData;
+    })
+  }
+
+  return (
+    <dialog ref={dialogRef} className="delete-modal" onClick={() => dialogRef.current.close()}>
+      <form method="dialog" className="delete-modal-content" onClick={(e) => e.stopPropagation()}>
+        <h2 className="delete-header">Delete this board?</h2>
+        <p className="delete-message">Are you sure you want to delete the ‘{selectedBoard.name}’ board? This action will remove all columns and tasks and cannot be reversed.</p>
         <button type="submit" className="delete-board-btn" onClick={handleConfirmDelete}>
           Delete
         </button>

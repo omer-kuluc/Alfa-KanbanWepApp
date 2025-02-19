@@ -1,19 +1,20 @@
 import "../css/Header.css";
 
 import { Data, ScreenSize } from "../App";
+
 import { useContext, useState, useEffect } from "react";
 
-export default function Header({ selectedBoard, newTaskDialogRef, newBoardDialogRef, editBoardDialogRef, deleteDialogRef, setSelectedBoard }) {
+export default function Header({ deleteBoardDialogRef, setIsNewColumn, selectedBoard, newTaskDialogRef, newBoardDialogRef, editBoardDialogRef, setSelectedBoard }) {
   const screenSize = useContext(ScreenSize);
 
   return screenSize >= 768 ?
-    <HeaderTablet selectedBoard={selectedBoard} newTaskDialogRef={newTaskDialogRef} editBoardDialogRef={editBoardDialogRef} deleteDialogRef={deleteDialogRef} />
+    <HeaderTablet deleteBoardDialogRef={deleteBoardDialogRef} setIsNewColumn={setIsNewColumn} selectedBoard={selectedBoard} newTaskDialogRef={newTaskDialogRef} editBoardDialogRef={editBoardDialogRef} />
     :
-    <HeaderMobile selectedBoard={selectedBoard} newTaskDialogRef={newTaskDialogRef} newBoardDialogRef={newBoardDialogRef} editBoardDialogRef={editBoardDialogRef} deleteDialogRef={deleteDialogRef} setSelectedBoard={setSelectedBoard} />;
+    <HeaderMobile deleteBoardDialogRef={deleteBoardDialogRef} setIsNewColumn={setIsNewColumn} selectedBoard={selectedBoard} newTaskDialogRef={newTaskDialogRef} newBoardDialogRef={newBoardDialogRef} editBoardDialogRef={editBoardDialogRef} setSelectedBoard={setSelectedBoard} />;
 }
 
 
-function HeaderMobile({ selectedBoard, newTaskDialogRef, newBoardDialogRef, editBoardDialogRef, deleteDialogRef, setSelectedBoard }) {
+function HeaderMobile({ deleteBoardDialogRef, setIsNewColumn, selectedBoard, newTaskDialogRef, newBoardDialogRef, editBoardDialogRef, setSelectedBoard }) {
   const { data } = useContext(Data);
   const [isActive, setIsActive] = useState(false);
   const [isDotActive, setDotActive] = useState(false);
@@ -55,6 +56,13 @@ function HeaderMobile({ selectedBoard, newTaskDialogRef, newBoardDialogRef, edit
   useEffect(() => {
     setIsActive(false)
   }, [selectedBoard])
+
+
+  function handleEditBoard() {
+    setIsNewColumn(false);
+    editBoardDialogRef.current.showModal();
+  }
+
 
   return (
     <>
@@ -107,8 +115,8 @@ function HeaderMobile({ selectedBoard, newTaskDialogRef, newBoardDialogRef, edit
             {
               isDotActive && (
                 <div className="dot-menu">
-                  <button className="editDot" onClick={() => editBoardDialogRef.current.showModal()}>Edit Board</button>
-                  <button className="deleteDot" onClick={() => deleteDialogRef.current.showModal()}>Delete Board</button>
+                  <button className="editDot" onClick={handleEditBoard}>Edit Board</button>
+                  <button className="deleteDot" onClick={() => deleteBoardDialogRef.current.showModal()}>Delete Board</button>
                 </div>
               )
             }
@@ -122,7 +130,7 @@ function HeaderMobile({ selectedBoard, newTaskDialogRef, newBoardDialogRef, edit
 
 
 
-function HeaderTablet({ selectedBoard, newTaskDialogRef, editBoardDialogRef, deleteDialogRef }) {
+function HeaderTablet({ deleteBoardDialogRef, setIsNewColumn, selectedBoard, newTaskDialogRef, editBoardDialogRef }) {
   const [isDotActive, setDotActive] = useState(false);
   const toggleDotmenu = () => {
     setDotActive(!isDotActive)
@@ -140,6 +148,12 @@ function HeaderTablet({ selectedBoard, newTaskDialogRef, editBoardDialogRef, del
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isDotActive]);
+
+  function handleEditBoard() {
+    setIsNewColumn(false);
+    editBoardDialogRef.current.showModal();
+  }
+
   return (
     <div className="header-tablet">
       <div className="header-tablet-left">
@@ -160,8 +174,8 @@ function HeaderTablet({ selectedBoard, newTaskDialogRef, editBoardDialogRef, del
           {
             isDotActive && (
               <div className="dot-menu-tablet">
-                <button className="editDot" onClick={() => editBoardDialogRef.current.showModal()}>Edit Board</button>
-                <button className="deleteDot" onClick={() => deleteDialogRef.current.showModal()}>Delete Board</button>
+                <button className="editDot" onClick={handleEditBoard}>Edit Board</button>
+                <button className="deleteDot" onClick={() => deleteBoardDialogRef.current.showModal()}>Delete Board</button>
               </div>
             )
           }
