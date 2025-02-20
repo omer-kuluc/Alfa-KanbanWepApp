@@ -1,0 +1,145 @@
+aside {
+  width: 280px;
+  transition: width 0.2s ease-in-out;
+  height: calc(100vh - 81px);
+  background-color: rgba(255, 255, 255, 1);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 81px;
+  justify-content: space-between;
+  padding-block: 32px;
+}
+
+.side-bar-menu {
+  h3 {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 15.12px;
+    letter-spacing: 2.4px;
+    color: rgba(130, 143, 163, 1);
+    padding-inline: 24px;
+    margin-bottom: 20px;
+  }
+
+  .header-createNew {
+    color: rgba(99, 95, 199, 1);
+    padding: 14px 24px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18.9px;
+    letter-spacing: 0px;
+    transition: background-color 0.2s ease;
+    width: 90%;
+    border: none;
+    background-color: transparent;
+  }
+}
+
+.side-bar-hidden-container {
+  padding: 14px 24px;
+  margin-right: 24px;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+  cursor: pointer;
+  &:hover {
+    background-color: rgb(99, 95, 199, 0.1);
+    p {
+      color: #635fc7;
+    }
+    svg {
+      fill: #635fc7;
+    }
+  }
+}
+
+.side-bar-hidden {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: transparent;
+  border: none;
+
+  p {
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 18.9px;
+    letter-spacing: 0px;
+    color: rgba(130, 143, 163, 1);
+  }
+}
+
+.hidden-button {
+  position: absolute;
+  z-index: 1000;
+  bottom: 32px;
+}
+
+.show-sidebar {
+  width: 56px;
+  height: 48px;
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+  background-color: rgba(99, 95, 199, 1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background-color: #a8a4ff;
+  }
+}
+
+.sidebar-hidden aside {
+  width: 0;
+  overflow: hidden;
+}
+
+.sidebar-down {
+  display: grid;
+  gap: 16px;
+}
+
+.side-bar-dark {
+  aside {
+    width: 280px;
+    transition: width 0.2s ease-in-out;
+    height: calc(100vh - 81px);
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 81px;
+    justify-content: space-between;
+    padding-block: 32px;
+    background-color: rgba(43, 44, 55, 1);
+  }
+  .toggle-container {
+    background-color: rgba(32, 33, 44, 1);
+  }
+  .side-bar-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-right: 1px solid rgba(43, 44, 55, 1);
+    height: 81px;
+    width: 280px;
+    padding-left: 15px;
+  }
+
+  .header-dropdown-items:not(.active-board) {
+    &:hover {
+      background-color: #fff;
+    }
+  }
+
+  .side-bar-hidden-container{
+    &:hover{
+      background-color: #fff;
+    }
+  }
+}
