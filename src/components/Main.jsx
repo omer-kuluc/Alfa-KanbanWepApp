@@ -652,13 +652,15 @@ function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedB
     <dialog ref={dialogRef} className={ darkMode ? "delete-modal dark" : "delete-modal"} onClick={() => dialogRef.current.close()}>
       <form method="dialog" className={ darkMode ? "delete-modal-content dark" : "delete-modal-content" }onClick={(e) => e.stopPropagation()}>
         <h2 className="delete-header">Delete this task?</h2>
-        <p className="delete-message">Are you sure you want to delete the ‘{task?.title}’ board? This action will remove all columns and tasks and cannot be reversed.</p>
-        <button type="submit" className="delete-board-btn" onClick={handleConfirmDelete}>
-          Delete
-        </button>
-        <button type="button" onClick={() => dialogRef.current.close()} className="cancel-delete-board-btn">
-          Cancel
-        </button>
+        <p className="delete-message">Are you sure you want to delete the ‘{task?.title}’ task and its subtasks? This action cannot be reversed.</p>
+        <div className="deleteModal-btns-group">
+          <button type="submit" className="delete-board-btn" onClick={handleConfirmDelete}>
+            Delete
+          </button>
+          <button type="button" onClick={() => dialogRef.current.close()} className="cancel-delete-board-btn">
+            Cancel
+          </button>
+        </div>
       </form>
     </dialog>
   );
@@ -689,12 +691,14 @@ function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard , darkMod
       <form method="dialog" className="delete-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="delete-header">Delete this board?</h2>
         <p className="delete-message">Are you sure you want to delete the ‘{selectedBoard.name}’ board? This action will remove all columns and tasks and cannot be reversed.</p>
-        <button type="submit" className="delete-board-btn" onClick={handleConfirmDelete}>
-          Delete
-        </button>
-        <button type="button" onClick={() => dialogRef.current.close()} className="cancel-delete-board-btn">
-          Cancel
-        </button>
+        <div className="deleteModal-btns-group">
+          <button type="submit" className="delete-board-btn" onClick={handleConfirmDelete}>
+            Delete
+          </button>
+          <button type="button" onClick={() => dialogRef.current.close()} className="cancel-delete-board-btn">
+            Cancel
+          </button>
+        </div>
       </form>
     </dialog>
   );

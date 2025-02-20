@@ -93,7 +93,6 @@ main {
 
   .main-grid-column-new-column {
     background: linear-gradient(180deg, rgba(43, 44, 55, 0.25) 0%, rgba(43, 44, 55, 0.125) 100%);
-
   }
 }
 
@@ -315,7 +314,7 @@ main {
 }
 
 /* When the checkbox is checked, add a blue background */
-.view-task-subtask-contents ul li label input:checked~.checkmark {
+.view-task-subtask-contents ul li label input:checked ~ .checkmark {
   background-color: #635fc7;
 }
 
@@ -327,7 +326,7 @@ main {
 }
 
 /* Show the checkmark when checked */
-.view-task-subtask-contents ul li label input:checked~.checkmark:after {
+.view-task-subtask-contents ul li label input:checked ~ .checkmark:after {
   display: block;
 }
 
@@ -348,7 +347,7 @@ main {
   display: grid;
   gap: 8px;
 
-  >button {
+  > button {
     color: #000112;
     font-weight: 500;
     font-size: 13px;
@@ -359,6 +358,10 @@ main {
     justify-content: space-between;
     border: 1px solid #828fa340;
     background-color: transparent;
+    border-radius: 4px;
+    &:hover {
+      border: 1px solid #635fc7;
+    }
   }
 }
 
@@ -389,10 +392,18 @@ main {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  > button {
+    width: 24px;
+  }
 
   button {
     background-color: transparent;
     border: none;
+  }
+
+  h2 {
+    font-size: 18px;
+    line-height: 22.68px;
   }
 }
 
@@ -441,7 +452,6 @@ main {
 
 .add-new-task-modal,
 .add-new-board-modal {
-
   input,
   textarea,
   select {
@@ -455,9 +465,13 @@ main {
     font-size: 13px;
     line-height: 23px;
     resize: none;
-
+    outline: none;
+    cursor: pointer;
+    &:hover {
+      border: 1px solid #635fc7;
+    }
     &:disabled {
-      color: rgba(0, 1, 18, 0.50);
+      color: rgba(0, 1, 18, 0.5);
     }
   }
 }
@@ -527,6 +541,9 @@ main {
   line-height: 23px;
   letter-spacing: 0px;
   text-align: center;
+  &:hover {
+    background-color: #635fc740;
+  }
 }
 
 .add-new-task-create-task-btn,
@@ -544,6 +561,9 @@ main {
   letter-spacing: 0px;
   text-align: center;
   border-style: none;
+  &:hover {
+    background-color: #a8a4ff;
+  }
 }
 
 .delete-modal {
@@ -566,16 +586,27 @@ main {
     margin-bottom: 24px;
   }
 
+  .deleteModal-btns-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
   .delete-board-btn {
     background: #e74c3c;
     color: white;
     border: none;
     border-radius: 20px;
-    padding: 10px;
+    padding-block: 8px;
     width: 100%;
     cursor: pointer;
-    font-weight: bold;
-    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 23px;
+
+    &:hover {
+      background-color: #ff9898;
+    }
   }
 
   .cancel-delete-board-btn {
@@ -584,12 +615,14 @@ main {
     font-weight: 700;
     font-size: 13px;
     line-height: 23px;
-    letter-spacing: 0px;
-    text-align: center;
     padding-block: 8px;
     border-style: none;
     background-color: #635fc71a;
     color: #635fc7;
+
+    &:hover {
+      background-color: #635fc740;
+    }
   }
 }
 
@@ -622,13 +655,15 @@ main {
   padding: 9px;
   border-radius: 4px;
   padding-left: 16px;
+  &:hover {
+    border: 1px solid #635fc7;
+  }
 }
 
 .columns-group {
   display: grid;
   gap: 12px;
 }
-
 
 @media (width >=768px) {
   main {
@@ -638,19 +673,25 @@ main {
   dialog {
     width: 480px !important;
   }
+
+  .delete-modal-content {
+    .deleteModal-btns-group {
+      flex-direction: row;
+    }
+  }
 }
 
 .dark {
   background-color: rgba(43, 44, 55, 1);
 
-  input {
+  input,
+  textarea,
+  select {
     background-color: rgba(43, 44, 55, 1);
-    color: white;
-  }
-
-  textarea {
-    background-color: rgba(43, 44, 55, 1);
-
+    color: #fff;
+    &:disabled {
+      color: #ffffff80;
+    }
   }
 
   h2 {
@@ -664,6 +705,9 @@ main {
   .add-new-subtask-btn {
     background-color: rgba(255, 255, 255, 1);
     color: #635fc7;
+    &:hover {
+      background-color: rgba(99, 95, 199, 0.251);
+    }
   }
 
   .main-drop-down-btn {
@@ -678,24 +722,46 @@ main {
   .add-new-board-add-column-btn {
     background-color: rgba(255, 255, 255, 1);
     color: #635fc7;
+    &:hover {
+      background-color: rgba(99, 95, 199, 0.251);
+    }
   }
 
   input::placeholder {
     color: gray;
   }
 
-
   .cancel-delete-board-btn {
     background-color: white;
   }
 
-  li {
-    background-color: rgba(32, 33, 44, 1);
+  .view-task-subtask-contents {
+    & ul {
+      li {
+        background-color: rgba(32, 33, 44, 1);
+        label {
+          color: #fff;
+        }
+        &:hover {
+          background-color: #635fc7;
+        }
+      }
+      .completed {
+        label {
+          color: #ffffff80;
+        }
+      }
+    }
   }
 
   .view-task-contents-interactions {
     background-color: rgba(32, 33, 44, 1);
     box-shadow: 0px 10px 20px 0px rgba(54, 78, 126, 0.25);
+  }
 
+  .view-task-current-status-contents {
+    > button {
+      color: #fff;
+    }
   }
 }
