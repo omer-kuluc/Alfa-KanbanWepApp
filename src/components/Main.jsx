@@ -22,9 +22,7 @@ export default function Main() {
   const [isSidebarHidden, setIsSidebarHidden] = useState(true);
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
   const [isNewColumn, setIsNewColumn] = useState(false);
-  const [darkMode, setDarkMode] = useState(
-    () => localStorage.getItem("theme") === "dark"
-  );
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("theme") === "dark");
 
   useEffect(() => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
@@ -93,18 +91,18 @@ export default function Main() {
           )}
         </main>
       </div>
-      <AddNewTask dialogRef={taskDialogRef} selectedBoard={selectedBoard} screenHeight={screenHeight} darkMode={darkMode} setDarkMode = {setDarkMode} />
-      <AddNewBoard dialogRef={boardDialogRef} setSelectedBoard={setSelectedBoard} darkMode={darkMode}/>
+      <AddNewTask dialogRef={taskDialogRef} selectedBoard={selectedBoard} screenHeight={screenHeight} darkMode={darkMode} setDarkMode={setDarkMode} />
+      <AddNewBoard dialogRef={boardDialogRef} setSelectedBoard={setSelectedBoard} darkMode={darkMode} />
       <EditTask dialogRef={editTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} viewTaskDialogRef={viewTaskDialogRef} screenHeight={screenHeight} darkMode={darkMode} />
       <EditBoard isNewColumn={isNewColumn} dialogRef={editBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} darkMode={darkMode} />
       <DeleteModal dialogRef={deleteDialogRef} viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} darkMode={darkMode} />
       <DeleteBoardModal dialogRef={deleteBoardDialogRef} selectedBoard={selectedBoard} setSelectedBoard={setSelectedBoard} darkMode={darkMode} />
-      <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} screenHeight={screenHeight} darkMode={darkMode}/>
+      <ViewTaskDialog viewTaskDialogRef={viewTaskDialogRef} task={selectedTask} selectedBoard={selectedBoard} deleteDialogRef={deleteDialogRef} editTaskDialogRef={editTaskDialogRef} screenHeight={screenHeight} darkMode={darkMode} />
     </>
   );
 }
 
-function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRef, editTaskDialogRef, screenHeight,darkMode }) {
+function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRef, editTaskDialogRef, screenHeight, darkMode }) {
   const dropDownButtonRef = useRef(null);
   const dotDropDownButtonRef = useRef(null);
   const { data, setData } = useContext(Data);
@@ -158,7 +156,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
   }
 
   return (
-    <dialog ref={viewTaskDialogRef} className={ darkMode ? "view-task-dialog dark" : "view-task-dialog"} onClick={handleCloseModal}>
+    <dialog ref={viewTaskDialogRef} className={darkMode ? "view-task-dialog dark" : "view-task-dialog"} onClick={handleCloseModal}>
       <div className="view-task-contents" onClick={(e) => e.stopPropagation()}>
         <div className="view-task-contents-header">
           <h2>{task?.title}</h2>
@@ -211,7 +209,7 @@ function ViewTaskDialog({ viewTaskDialogRef, task, selectedBoard, deleteDialogRe
 }
 
 // Add New Task Modal
-function AddNewTask({ dialogRef, selectedBoard, screenHeight ,darkMode, setDarkMode}) {
+function AddNewTask({ dialogRef, selectedBoard, screenHeight, darkMode, setDarkMode }) {
   const formRef = useRef(null);
   const { data, setData } = useContext(Data);
   const screenSize = useContext(ScreenSize);
@@ -337,7 +335,7 @@ function AddNewTask({ dialogRef, selectedBoard, screenHeight ,darkMode, setDarkM
 }
 
 // Add New Board Modal
-function AddNewBoard({ dialogRef, setSelectedBoard,darkMode}) {
+function AddNewBoard({ dialogRef, setSelectedBoard, darkMode }) {
   const { data, setData } = useContext(Data);
   const [columns, setColumns] = useState([
     {
@@ -388,7 +386,7 @@ function AddNewBoard({ dialogRef, setSelectedBoard,darkMode}) {
   }
 
   return (
-    <dialog ref={dialogRef} className={ darkMode ? "add-new-board-modal dark" : "add-new-board-modal"} onClick={() => dialogRef.current.close()}>
+    <dialog ref={dialogRef} className={darkMode ? "add-new-board-modal dark" : "add-new-board-modal"} onClick={() => dialogRef.current.close()}>
       <form method="dialog" className="add-new-board-modal-content" onClick={(e) => e.stopPropagation()} onSubmit={handleSubmit}>
         <h2 className="add-new-board-header">Add New Board</h2>
 
@@ -424,7 +422,7 @@ function AddNewBoard({ dialogRef, setSelectedBoard,darkMode}) {
   );
 }
 
-function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHeight,darkMode }) {
+function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHeight, darkMode }) {
   const { data, setData } = useContext(Data);
   const screenSize = useContext(ScreenSize);
   const dropDownButtonRef = useRef(null);
@@ -490,7 +488,7 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
   }
 
   return (
-    <dialog ref={dialogRef} className= { darkMode ? "add-new-task-modal dark" : "add-new-task-modal"} onClick={() => dialogRef.current.close()}>
+    <dialog ref={dialogRef} className={darkMode ? "add-new-task-modal dark" : "add-new-task-modal"} onClick={() => dialogRef.current.close()}>
       <form onSubmit={handleSubmit} method="dialog" className="add-new-task-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="add-new-task-header">Edit Task</h2>
         <label>
@@ -546,18 +544,19 @@ function EditTask({ dialogRef, task, selectedBoard, viewTaskDialogRef, screenHei
   );
 }
 
-function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard ,darkMode}) {
+function EditBoard({ isNewColumn, dialogRef, selectedBoard, darkMode }) {
+  const formRef = useRef(null);
   const { data, setData } = useContext(Data);
-  const [edittingBoard, setEdittingBoard] = useState({ ...selectedBoard });
+  const [edittingBoard, setEdittingBoard] = useState(structuredClone(selectedBoard));
 
   useEffect(() => {
-    setEdittingBoard({ ...selectedBoard });
+    setEdittingBoard(structuredClone(selectedBoard));
   }, [selectedBoard]);
 
   function handleColumnChange(e, index) {
     edittingBoard.columns[index].name = e.target.value;
     edittingBoard.columns[index].tasks.map((x) => (x.status = e.target.value));
-    setEdittingBoard({ ...edittingBoard });
+    setEdittingBoard(structuredClone(edittingBoard));
   }
 
   function handleAddNewColumn() {
@@ -568,7 +567,7 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard ,da
     };
     if (edittingBoard.columns.length < 6) {
       edittingBoard.columns.push(newColumnObj);
-      setEdittingBoard({ ...edittingBoard });
+      setEdittingBoard(structuredClone(edittingBoard));
     }
   }
 
@@ -585,7 +584,7 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard ,da
         tasks: [],
       };
     }
-    setEdittingBoard({ ...edittingBoard });
+    setEdittingBoard(structuredClone(edittingBoard));
   }
 
   function handleSubmit() {
@@ -597,13 +596,14 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard ,da
   }
 
   function handleReset() {
-    setEdittingBoard({ ...selectedBoard });
+    setEdittingBoard(structuredClone(selectedBoard));
     dialogRef.current.close();
+    formRef.current.reset();
   }
 
   return (
-    <dialog ref={dialogRef} className={ darkMode ? "add-new-board-modal dark" : "add-new-board-modal"} onClick={handleReset}>
-      <form onSubmit={handleSubmit} method="dialog" className="add-new-board-modal-content" onClick={(e) => e.stopPropagation()}>
+    <dialog ref={dialogRef} className={darkMode ? "add-new-board-modal dark" : "add-new-board-modal"} onClick={handleReset}>
+      <form ref={formRef} onSubmit={handleSubmit} method="dialog" className="add-new-board-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="add-new-board-header">{isNewColumn ? "Add New Column" : "Edit Board"}</h2>
         <label>
           <p className="add-new-board-name">Board Name</p>
@@ -637,7 +637,7 @@ function EditBoard({ isNewColumn, dialogRef, selectedBoard, setSelectedBoard ,da
   );
 }
 
-function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedBoard ,darkMode }) {
+function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedBoard, darkMode }) {
   const { data, setData } = useContext(Data);
 
   function handleConfirmDelete() {
@@ -649,8 +649,8 @@ function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedB
   }
 
   return (
-    <dialog ref={dialogRef} className={ darkMode ? "delete-modal dark" : "delete-modal"} onClick={() => dialogRef.current.close()}>
-      <form method="dialog" className={ darkMode ? "delete-modal-content dark" : "delete-modal-content" }onClick={(e) => e.stopPropagation()}>
+    <dialog ref={dialogRef} className={darkMode ? "delete-modal dark" : "delete-modal"} onClick={() => dialogRef.current.close()}>
+      <form method="dialog" className={darkMode ? "delete-modal-content dark" : "delete-modal-content"} onClick={(e) => e.stopPropagation()}>
         <h2 className="delete-header">Delete this task?</h2>
         <p className="delete-message">Are you sure you want to delete the ‘{task?.title}’ task and its subtasks? This action cannot be reversed.</p>
         <div className="deleteModal-btns-group">
@@ -666,7 +666,7 @@ function DeleteModal({ dialogRef, viewTaskDialogRef, closeModal, task, selectedB
   );
 }
 
-function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard , darkMode}) {
+function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard, darkMode }) {
   const { data, setData } = useContext(Data);
 
   function handleConfirmDelete() {
@@ -678,7 +678,6 @@ function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard , darkMod
           name: "My Board",
           columns: [],
         });
-        console.log(newData);
       }
       setSelectedBoard(newData[0]);
       return newData;
@@ -687,7 +686,7 @@ function DeleteBoardModal({ dialogRef, selectedBoard, setSelectedBoard , darkMod
   }
 
   return (
-    <dialog ref={dialogRef} className={ darkMode ? "delete-modal dark" : "delete-modal"}  onClick={() => dialogRef.current.close()}>
+    <dialog ref={dialogRef} className={darkMode ? "delete-modal dark" : "delete-modal"} onClick={() => dialogRef.current.close()}>
       <form method="dialog" className="delete-modal-content" onClick={(e) => e.stopPropagation()}>
         <h2 className="delete-header">Delete this board?</h2>
         <p className="delete-message">Are you sure you want to delete the ‘{selectedBoard.name}’ board? This action will remove all columns and tasks and cannot be reversed.</p>
